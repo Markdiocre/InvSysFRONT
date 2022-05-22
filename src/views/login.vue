@@ -1,11 +1,12 @@
 <script lang="ts">
 import { defineComponent} from 'vue'
-import { userProfile } from '@/stores/userProfile'
+import { userToken } from '@/stores/token'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default defineComponent({
     setup(){
-        const store = userProfile()
+        const store = userToken()
 
         return{
             store
@@ -19,10 +20,11 @@ export default defineComponent({
     },
     methods:{
         login(){
-            axios.post('/invsys_api/api/auth/login.php/',{
+            axios.post('v1/api-token-auth/',{
                 username: this.username, password: this.password
             }).then((res)=>{
                 this.store.login(res.data);
+                Swal.fire({title: 'Welcome!'})
                 this.$router.push({name: 'dashboard'})
             })
         }
@@ -36,7 +38,7 @@ export default defineComponent({
         <div class="col-md-4">
             
         </div>
-        <div class="col-lg-4 p-5">
+        <div class="col-md-4 p-5">
             <div class="bord p-4">
                 <div class="text-center">
                     <h1>Login Panel</h1>

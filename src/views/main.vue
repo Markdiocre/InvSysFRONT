@@ -1,11 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { RouterView, RouterLink } from 'vue-router'
-import { userProfile } from '@/stores/userProfile'
+import { userToken } from '@/stores/token'
+import axios from 'axios'
 
 export default defineComponent({
     setup(){
-        const store = userProfile()
+        const store = userToken()
         return{
             store
         }
@@ -20,7 +21,16 @@ export default defineComponent({
         }
     },
     mounted(){
-        this.currentUser = this.store.getUser
+        axios.get('v1/auth/users/me/',{
+            headers:{
+                Authorization: 'token '+this.store.getToken.token
+            }
+        }).then((res)=>{
+            this.currentUser = res.data
+        }).catch((err)=>{
+            console.log(err)
+        })
+        
     }
 })
 </script>
@@ -34,13 +44,15 @@ export default defineComponent({
                 <li>
                     <router-link :to="{ name:'dashboard'}">Dashboard</router-link>
                 </li>
-                <li>
-                    <a href="#UserManagement" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">User Management</a>
-                    <ul class="collapse list-unstyled" id="UserManagement">
-                        <li><a href="#">Manage User Groups</a></li>
-                        <li><a href="">Manage Users</a></li>
-                    </ul>
-                </li>
+                <div v-if="currentUser.user_level <= 1">
+                    <li>
+                        <a href="#UserManagement" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">User Management</a>
+                        <ul class="collapse list-unstyled" id="UserManagement">
+                            <li><router-link :to="{name:'userGroup'}">Manage User Groups</router-link></li>
+                            <li><a href="">Manage Users</a></li>
+                        </ul>
+                    </li>
+                </div>
                 <li>
                     <a href="view_categories.php">Categories</a>
                 </li>
