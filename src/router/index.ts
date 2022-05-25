@@ -5,6 +5,9 @@ import dashboardVue from "@/components/dashboard.vue";
 import userGroup from "@/components/userGroup.vue"
 import addUserGroup from "@/components/addUserGroup.vue"
 import editUserGroup from "@/components/editUserGroup.vue"
+import user from '@/components/user.vue'
+import addUser from '@/components/addUser.vue'
+import editUser from '@/components/editUser.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +41,21 @@ const router = createRouter({
           path:"editUserGroup/:id",
           name:"editUserGroup",
           component: editUserGroup
+        },
+        {
+          path:"user",
+          name:"viewUser",
+          component: user
+        },
+        {
+          path: "addUser",
+          name:"addUser",
+          component: addUser
+        },
+        {
+          path: "editUser/:id",
+          name:"editUser",
+          component: editUser
         }
       ]
     }

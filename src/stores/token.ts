@@ -15,6 +15,9 @@ export const userToken = defineStore('token',{
     actions:{
         login(token: any){
             this.token = token
+        },
+        logout(){
+            this.token = {} as any
         }
     }
 })

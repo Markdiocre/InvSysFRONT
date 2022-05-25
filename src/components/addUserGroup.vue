@@ -5,6 +5,7 @@ import { defineComponent } from 'vue'
 import Swal from 'sweetalert2'
 
 export default defineComponent({
+    props:['currentUser'],
     setup() {
         const store = userToken()
         return{
@@ -38,7 +39,6 @@ export default defineComponent({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Something went wrong!',
-                    footer: '<a href="">Why do I have this issue?</a>'
                 })
             })
         }

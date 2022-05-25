@@ -5,6 +5,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 
 export default defineComponent({
+    props:['currentUser'],
     setup() {
         const store = userToken()
         return{

@@ -108,7 +108,7 @@ export default defineComponent({
 </template>
 
 <style scoped>
-    .router-link{
+    a{
         color:white !important;
     }
 </style>

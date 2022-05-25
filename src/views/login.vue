@@ -26,6 +26,12 @@ export default defineComponent({
                 this.store.login(res.data);
                 Swal.fire({title: 'Welcome!'})
                 this.$router.push({name: 'dashboard'})
+            }).catch(()=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Credentials Error',
+                    text: 'You\'ve provided wrong username or password, or your account doesn\'t exist',
+                })
             })
         }
     }
@@ -34,33 +40,75 @@ export default defineComponent({
 
 
 <template>
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row login">
+        <div class="col-lg-9 d-flex align-items-center justify-content-center">
+            <div class="form-wrapper align-items-center justify-content-center text-center">
+                <h1 class="text-center title pb-5">Inventory Management and Monitoring System</h1>
+                <img src="@/assets/loginLogo.png" class="logo img-thumbnail  mx-auto  d-block" alt="Login Logo">
+            </div>
+            
             
         </div>
-        <div class="col-md-4 p-5">
-            <div class="bord p-4">
+        <div class="col-lg-3 d-flex align-items-center justify-content-center loginbord">
+            <div class="p-4">
                 <div class="text-center">
-                    <h1>Login Panel</h1>
-                    <p>Inventory Management System</p>
+                    <h1>Welcome!</h1>
                 </div>
                 <form method="post" @submit.prevent="login">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" v-model="username" placeholder="name@example.com" name="username" autocomplete="off">
-                        <label for="floatingInput">Username</label>
+                    <div class="input-group pt-3">
+                        <span class="input-group-text icon" for="floatingInput"><i class="bi bi-people-fill m-2 icons"></i></span>
+                        <input type="text" class="form-control form-control-lg" v-model="username"  name="username" autocomplete="off" placeholder="Username">
+                        
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" class="form-control" v-model="password" placeholder="name@example.com" name="password">
-                        <label for="floatingInput">Password</label>
+                    <div class="input-group pt-3">
+                        <span class="input-group-text icon" for="floatingInput"><i class="bi bi-key-fill m-2 icons"></i></span>
+                        <input type="password" class="form-control form-control-lg" v-model="password" name="password" placeholder="Password">
+                        
                     </div>
                     <div class="d-grid gap-2 pt-3">
-                        <button class="btn btn-outline-danger" type="submit">Log In</button>
+                        <button class="btn btn-outline-danger btn-lg" type="submit">Log In</button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="col-md-4">
-
-        </div>
     </div>
 </template>
+
+<style scoped>
+*{
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .logo{
+        width: 500px !important;
+        height: 500px !important;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    .login{
+        max-width: 100%;
+        min-height: 100vh;
+    }
+
+    .loginbord{
+        background: white !important;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+    }
+
+    .icon{
+        background: transparent !important;
+        border-right-color: transparent !important;
+    }
+
+    .form-control{
+        border-left-color: transparent !important;
+    }
+
+    .title{
+        font-family: 'Anton', sans-serif !important;
+        font-size: 3rem;
+        color:#315F99;
+    }
+</style>
