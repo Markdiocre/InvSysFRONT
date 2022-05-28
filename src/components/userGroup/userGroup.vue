@@ -26,11 +26,7 @@ export default defineComponent({
             }).then((res)=>{
                 this.usergroups = res.data
             }).catch((err)=>{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                })
+                console.log(err)
             })
         },
         deleteUserGroup(id: any){
@@ -86,22 +82,24 @@ export default defineComponent({
                     <h3 class="p-4">User Groups</h3>
                     <router-link :to="{name:'addUserGroup'}" class="btn btn-info m-4 p-2">Add New User Group</router-link>
                 </div>
-                <table class="table table-hover table-responsive pt-3 text-center">
-                    <thead>
-                        <th>Group Name</th>
-                        <th>Group Level</th>
-                        <th>Group Status</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="group in usergroups" :key="group.user_group_id">
-                            <td>{{group.group_name}}</td>
-                            <td>{{group.group_level}}</td>
-                            <td><p v-if="group.group_status == 1">Active</p><p v-else>Inactive</p></td>
-                            <td><router-link :to="{name:'editUserGroup', params:{id:group.user_group_id}}" class="btn btn-warning router-link me-1"><i class="bi bi-pencil-square">Edit</i></router-link><button @click="deleteUserGroup(group.user_group_id)" class="btn btn-danger router-link"><i class="bi bi-trash3-fill">Delete</i></button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover table-responsive pt-3 text-center">
+                        <thead>
+                            <th>Group Name</th>
+                            <th>Group Level</th>
+                            <th>Group Status</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="group in usergroups" :key="group.user_group_id">
+                                <td>{{group.group_name}}</td>
+                                <td>{{group.group_level}}</td>
+                                <td>{{group.group_status ? 'Active' : 'Inactive' }}</td>
+                                <td><router-link :to="{name:'editUserGroup', params:{id:group.user_group_id}}" class="btn btn-warning router-link me-1"><i class="bi bi-pencil-square">Edit</i></router-link><button @click="deleteUserGroup(group.user_group_id)" class="btn btn-danger router-link"><i class="bi bi-trash3-fill">Delete</i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

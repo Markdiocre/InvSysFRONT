@@ -3,45 +3,33 @@ import { userToken } from '@/stores/token'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import moment from 'moment'
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
     props:['currentUser'],
     setup() {
         const store = userToken()
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            users: {} as any,
-            userGroups: {} as any
-        }
-    },
-    methods:{
-        getUsers(){
+
+        let users = ref({} as any)
+        let userGroups = ref({} as any)
+
+        function getUsers(){
             axios.get('v1/auth/users/',{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.users = res.data
-            }).catch(()=>{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                })
+                users.value = res.data
             })
-        },
-        getUserGroups(){
+        }
+
+        function getUserGroups(){
             axios.get('v1/user-group/',{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.userGroups = res.data
+                userGroups.value = res.data
             }).catch((err)=>{
                 Swal.fire({
                     icon: 'error',
@@ -49,21 +37,21 @@ export default defineComponent({
                     text: 'Something went wrong!',
                 })
             })
-        },
-        findUserLevelEquivalent(user_level: any){
-            for(var i = 0; i < this.userGroups.length; i++){
-                if(this.userGroups[i].user_group_id === user_level ){
-                    return this.userGroups[i].group_name
+        }
+
+        function findUserLevelEquivalent(user_level: any){
+            for(var i = 0; i < userGroups.value.length; i++){
+                if(userGroups.value[i].user_group_id === user_level ){
+                    return userGroups.value[i].group_name
                 }
             }
-        },
-        filter(arr:any, criteria:any) {
-        
-        },
-        translateDate(date: any){
+        }
+
+        function translateDate(date: any){
             return moment(date).format('LLLL')
-        },
-        async deleteUser(id: any){
+        }
+
+        async function deleteUser(id: any){
             const { value: password } = await Swal.fire({
                 title: 'Enter your password',
                 text:'To confirm the deletetion of this user, please enter your password.',
@@ -72,12 +60,12 @@ export default defineComponent({
             })
 
             if(password){
-                axios.delete('v1/auth/users/'+id,{
+                axios.delete('v1/auth/users/'+id+'/',{
                     data:{
                         current_password: password
                     },
                     headers:{
-                        Authorization: 'token '+this.store.getToken.token
+                        Authorization: 'token '+ store.getToken.token
                     }
                 }).then(()=>{
                     Swal.fire(
@@ -87,7 +75,7 @@ export default defineComponent({
                         text:'User Group successfully deleted!'
                         }
                     )
-                    this.getUsers()
+                    getUsers()
                 }).catch(()=>{
                     Swal.fire({
                         icon: 'error',
@@ -100,10 +88,19 @@ export default defineComponent({
             }
                     
         }
-    },
-    mounted(){
-        this.getUsers()
-        this.getUserGroups()
+
+        onMounted(()=>{
+            getUsers()
+            getUserGroups()
+        })
+        return{
+            store,
+            users,
+            userGroups,
+            findUserLevelEquivalent,
+            translateDate,
+            deleteUser
+        }
     }
 })
 </script>
@@ -116,8 +113,8 @@ export default defineComponent({
             <h3 class="p-4">Users</h3>
             <router-link :to="{name: 'addUser'}" class="btn btn-info m-4 p-2">Add New User</router-link>
         </div>
-        <div class="container-fluid p-3 text-center">
-            <table class="table table-hover table-responsive">
+        <div class="container-fluid p-3 text-center table-responsive">
+            <table class="table table-hover ">
                 <thead>
                     <th>Name</th>
                     <th>Username</th>

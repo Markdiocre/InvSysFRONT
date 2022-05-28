@@ -1,31 +1,32 @@
 <script lang="ts">
-import { defineComponent} from 'vue'
+import { defineComponent, ref} from 'vue'
 import { userToken } from '@/stores/token'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 
 export default defineComponent({
     setup(){
         const store = userToken()
+        const router = useRouter()
 
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            username: '',
-            password: ''
-        }
-    },
-    methods:{
-        login(){
+        let username = ref('')
+        let password = ref('')
+
+        onBeforeRouteUpdate(()=>{
+            if(store.getAuthStatus == true){
+                Swal.fire('You\'re already authenticated. Redirecting you to main page.')
+                router.push({name: 'dashboard'})
+            }
+        })
+
+        function login(){
             axios.post('v1/api-token-auth/',{
-                username: this.username, password: this.password
+                username: username.value, password: password.value
             }).then((res)=>{
-                this.store.login(res.data);
+                store.login(res.data);
                 Swal.fire({title: 'Welcome!'})
-                this.$router.push({name: 'dashboard'})
+                router.push({name: 'dashboard'})
             }).catch(()=>{
                 Swal.fire({
                     icon: 'error',
@@ -33,6 +34,13 @@ export default defineComponent({
                     text: 'You\'ve provided wrong username or password, or your account doesn\'t exist',
                 })
             })
+        }
+
+        return{
+            store,
+            username, 
+            password,
+            login
         }
     }
 })

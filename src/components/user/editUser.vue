@@ -1,39 +1,36 @@
 <script lang="ts">
 import { userToken } from '@/stores/token'
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
 export default defineComponent({
     setup() {
         const store = userToken()
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            userGroups: {} as any,
-            user: {} as any
-        }
-    },
-    methods:{
-        getUser(){
-            axios.get('v1/auth/users/'+this.$route.params.id,{
+        const router = useRouter()
+        const route = useRoute()
+
+        let userGroups = ref({} as any)
+        let user = ref({} as any)
+
+        function getUser(){
+            axios.get('v1/auth/users/'+ route.params.id,{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.user = res.data
+                user.value = res.data
             })
-        },
-        getUserGroups(){
+        }
+
+        function getUserGroups(){
             axios.get('v1/user-group/',{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.userGroups = res.data
+                userGroups.value = res.data
             }).catch((err)=>{
                 Swal.fire({
                     icon: 'error',
@@ -41,16 +38,18 @@ export default defineComponent({
                     text: 'Something went wrong!',
                 })
             })
-        },
-        putUser(){
-            axios.put('v1/auth/users/'+this.$route.params.id,{
-                name:this.user.name,
-                username: this.user.username,
-                user_level: this.user.user_level,
-                is_active: this.user.is_active
+        }
+
+        function putUser(){
+            axios.put('v1/auth/users/'+ route.params.id+'/',{
+                name: user.value.name,
+                username: user.value.username,
+                user_level: user.value.user_level,
+                is_active: user.value.is_active,
+                last_login: user.value.last_login
             },{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+store.getToken.token
                 }
             }).then((res)=>{
                 Swal.fire({
@@ -58,7 +57,7 @@ export default defineComponent({
                     title: 'Success!',
                     text: 'User have been successfully updated!'
                 })
-                this.$router.push({name: 'viewUser'})
+                router.push({name: 'viewUser'})
             }).catch(()=>{
                 Swal.fire({
                     icon: 'error',
@@ -67,10 +66,19 @@ export default defineComponent({
                 })
             })
         }
-    },
-    mounted(){
-        this.getUser()
-        this.getUserGroups()
+
+        onMounted(()=>{
+            getUser()
+            getUserGroups()
+        })
+        return{
+            store,
+            userGroups,
+            user,
+            getUser,
+            getUserGroups,
+            putUser
+        }
     }
 })
 </script>

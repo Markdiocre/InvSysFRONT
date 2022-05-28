@@ -1,40 +1,37 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { userToken } from '@/stores/token'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
     props:['currentUser'],
     setup() {
         const store = userToken()
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            userGroup: {} as any
-        }
-    },
-    methods:{
-        getUserGroup(){
-            axios.get('v1/user-group/'+this.$route.params.id,{
+        const route = useRoute()
+        const router = useRouter()
+
+        let userGroup = ref({} as any)
+
+        function getUserGroup(){
+            axios.get('v1/user-group/'+ route.params.id+'/',{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.userGroup = res.data
+                userGroup.value = res.data
             })
-        },
-        putUserGroup(){
-            axios.put('v1/user-group/'+this.$route.params.id+'/',{
-                group_name: this.userGroup.group_name,
-                group_level: this.userGroup.group_level,
-                group_status: this.userGroup.group_status
+        }
+
+        function putUserGroup(){
+            axios.put('v1/user-group/'+ route.params.id+'/',{
+                group_name: userGroup.value.group_name,
+                group_level: userGroup.value.group_level,
+                group_status: userGroup.value.group_status
             },{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
                 Swal.fire({
@@ -42,7 +39,7 @@ export default defineComponent({
                     title: 'Success!',
                     text: 'User group have been successfully updated!'
                 })
-                this.$router.push({name: 'userGroup'})
+                router.push({name: 'userGroup'})
             }).catch((err)=>{
                 Swal.fire({
                     icon: 'error',
@@ -52,9 +49,17 @@ export default defineComponent({
                 })
             })
         }
-    },
-    mounted(){
-        this.getUserGroup()
+
+        onMounted(()=>{
+            getUserGroup()
+        })
+
+        return{
+            store,
+            userGroup,
+            getUserGroup,
+            putUserGroup
+        }
     }
 })
 </script>

@@ -1,61 +1,74 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { RouterView, RouterLink } from 'vue-router'
+import { defineComponent, onMounted, ref } from 'vue'
+import { RouterView, RouterLink, onBeforeRouteUpdate, useRouter } from 'vue-router'
 import { userToken } from '@/stores/token'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import moment from 'moment'
 
 export default defineComponent({
-    setup(){
-        const store = userToken()
-        return{
-            store
-        }
-    },
     components:{
         RouterView,
         RouterLink
     },
-    data(){
-        return {
-            currentUser : {} as any,
-            sideBarActive: false
-        }
-    },
-    methods:{
-        logout(){
-            axios.post('v1/auth/token/logout/',this.store.getToken.token,{
+    setup(){
+        const store = userToken()
+        const router = useRouter()
+
+        let currentUser = ref({} as any)
+        let sideBarActive = ref(false)
+
+        onBeforeRouteUpdate(()=>{
+            if(store.getAuthStatus == false){
+                Swal.fire('You\'re not authenticated! Please Log in first!')
+                router.push({name: 'login'})
+            }
+        })
+
+
+        onMounted(()=>{
+            axios.get('v1/auth/users/me/',{
+            headers:{
+                Authorization: 'token '+ store.getToken.token
+            }
+            }).then((res)=>{
+                currentUser.value = res.data
+            }).catch((err)=>{
+                console.log(err)
+            })
+        })
+
+        function logout(){
+            axios.post('v1/auth/token/logout/', store.getToken.token,{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then(()=>{
                 Swal.fire({
                     title: 'Logged out!'
                 })
-                this.$router.push({name:'login'})
-                this.store.logout
+                router.push({name:'login'})
+                store.logout
             })
-        },
-        toggleSideBar(){
-            this.sideBarActive = !this.sideBarActive
-        },
-        getTime(){
+        }
+
+        function toggleSideBar(){
+            sideBarActive.value = !sideBarActive.value
+        }
+
+        function getTime(){
             return moment().format('MMMM Do YYYY, h:mm:ss a')
         }
+        return{
+            store,
+            currentUser,
+            sideBarActive,
+            logout,
+            toggleSideBar,
+            getTime
+        }
     },
-    mounted(){
-        axios.get('v1/auth/users/me/',{
-            headers:{
-                Authorization: 'token '+this.store.getToken.token
-            }
-        }).then((res)=>{
-            this.currentUser = res.data
-        }).catch((err)=>{
-            console.log(err)
-        })
-        
-    }
+
 })
 </script>
 
@@ -78,7 +91,7 @@ export default defineComponent({
                     </li>
                 </div>
                 <li>
-                    <a href="view_categories.php">Categories</a>
+                    <router-link :to="{name:'viewCategories'}">Categories</router-link>
                 </li>
                 <li>
                     <a href="#ProductManagement" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Products</a>
@@ -103,7 +116,7 @@ export default defineComponent({
                                     {{currentUser.name}}
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="edit_account.php"><i class="bi bi-gear-fill pe-1"></i>Settings</a></li>
+                                    <li><router-link :to="{name:'profile'}" class="dropdown-item"><i class="bi bi-person-fill pe-1"></i>Profile</router-link></li>
                                     <li><button class="dropdown-item" @click="logout"><i class="bi bi-box-arrow-in-right pe-1"></i>Log Out</button></li>
                                 </ul>
                             </li>

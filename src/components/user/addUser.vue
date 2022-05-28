@@ -1,6 +1,7 @@
 <script lang="ts">
 import { userToken } from '@/stores/token'
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import moment from 'moment'
@@ -9,28 +10,22 @@ export default defineComponent({
     props:['currentUser'],
     setup() {
         const store = userToken()
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            userGroups: {} as any,
-            name: '',
-            username: '',
-            password: '',
-            user_level: '',
-            last_login: moment().format('YYYY-MM-DD[T]HH:mm:ss')
-        }
-    },
-    methods:{
-        getUserGroups(){
+        const router = useRouter()
+
+        let userGroups = ref({} as any)
+        let name = ref('')
+        let username = ref('')
+        let password = ref('')
+        let user_level = ref('')
+        let last_login = moment().format('YYYY-MM-DD[T]HH:mm:ss')
+
+        function getUserGroups(){
             axios.get('v1/user-group/',{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.userGroups = res.data
+                userGroups.value = res.data
             }).catch((err)=>{
                 Swal.fire({
                     icon: 'error',
@@ -38,17 +33,18 @@ export default defineComponent({
                     text: 'Something went wrong!',
                 })
             })
-        },
-        async addNewUser(){
+        }
+
+        async function addNewUser(){
             await axios.post('v1/auth/users/',{
-                name: this.name,
-                username: this.username,
-                password: this.password,
-                user_level: this.user_level,
-                last_login: this.last_login
+                name: name.value,
+                username: username.value,
+                password: password.value,
+                user_level: user_level.value,
+                last_login: last_login
             },{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+store.getToken.token
                 }
             }).then((res: any)=>{
                 Swal.fire({
@@ -56,7 +52,7 @@ export default defineComponent({
                     title: 'Success!',
                     text: 'New User have been succesfully created!'
                 })
-                this.$router.push({name:"viewUser"})
+                router.push({name:"viewUser"})
             }).catch((err: any)=>{
                 Swal.fire({
                     icon: 'error',
@@ -65,9 +61,22 @@ export default defineComponent({
                 })
             })
         }
-    },
-    mounted(){
-        this.getUserGroups()
+
+        onMounted(()=>{
+            getUserGroups()
+        })
+
+        return{
+            store,
+            userGroups,
+            name,
+            username,
+            password,
+            user_level,
+            last_login,
+            getUserGroups,
+            addNewUser
+        }
     }
 })
 </script>

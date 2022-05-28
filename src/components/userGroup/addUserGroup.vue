@@ -1,31 +1,26 @@
 <script lang="ts">
 import { userToken } from '@/stores/token'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import Swal from 'sweetalert2'
 
 export default defineComponent({
     props:['currentUser'],
     setup() {
         const store = userToken()
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            group_name: '',
-            group_level: ''
-        }
-    },
-    methods:{
-        addUserGroup(){
+        const router = useRouter()
+        
+        let group_name = ref(String)
+        let group_level = ref(Number)
+
+        function addUserGroup(){
             axios.post('v1/user-group/',{
-                group_name: this.group_name,
-                group_level: this.group_level
+                group_name: group_name.value,
+                group_level: group_level.value
             },{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
                 Swal.fire({
@@ -33,7 +28,7 @@ export default defineComponent({
                     title: 'Success!',
                     text: 'New user group have been succesfully created!'
                 })
-                this.$router.push({name:"userGroup"})
+                router.push({name:"userGroup"})
             }).catch((err)=>{
                 Swal.fire({
                     icon: 'error',
@@ -41,6 +36,13 @@ export default defineComponent({
                     text: 'Something went wrong!',
                 })
             })
+        }
+
+        return{
+            store,
+            group_name,
+            group_level,
+            addUserGroup
         }
     }
 })
