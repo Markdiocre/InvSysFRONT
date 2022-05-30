@@ -89,7 +89,7 @@ export default defineComponent({
                             text:'Request successfully reverted!'
                             }
                         )
-                        getProducts()
+                        selfRequest()
                     }).catch(()=>{
                         Swal.fire({
                             icon: 'error',
