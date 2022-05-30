@@ -139,7 +139,7 @@ export default defineComponent({
                             <td>{{findProductEquivalent(request.product)}}</td>
                             <td>{{request.quantity}}</td>
                             <td>{{translateDate(request.request_date)}}</td>
-                            <td><button class="btn btn-danger"><i class="bi bi-backspace-fill me-2"></i>Revert</button></td>
+                            <td><button class="btn btn-danger" @click="revertRequest(request.request_id)"><i class="bi bi-backspace-fill me-2"></i>Revert</button></td>
                         </tr>
                     </tbody>
                 </table>
