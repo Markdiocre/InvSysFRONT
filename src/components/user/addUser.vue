@@ -89,15 +89,15 @@ export default defineComponent({
             <h3 class="text-center p-3">Add New User</h3>
             <form method="post" class="p-3" @submit.prevent="addNewUser">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" name="name"  v-model="name">
+                    <input type="text" class="form-control"  placeholder="name@example.com" name="name"  v-model="name" autocomplete="off">
                     <label for="floatingInput">Name</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" name="username" v-model="username">
+                    <input type="text" class="form-control"  placeholder="name@example.com" name="username" v-model="username" autocomplete="off">
                     <label for="floatingInput">Username</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control"  placeholder="name@example.com" name="password" v-model="password">
+                    <input type="password" class="form-control"  placeholder="name@example.com" name="password" v-model="password" autocomplete="off">
                     <label for="floatingInput">Password</label>
                 </div>
                 <select class="form-select form-floating mb-3" v-model="user_level">

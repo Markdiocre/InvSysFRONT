@@ -11,8 +11,8 @@ export default defineComponent({
         const store = userToken()
         const router = useRouter()
         
-        let group_name = ref(String)
-        let group_level = ref(Number)
+        let group_name = ref('')
+        let group_level = ref(0)
 
         function addUserGroup(){
             axios.post('v1/user-group/',{

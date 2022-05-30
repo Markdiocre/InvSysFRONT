@@ -94,10 +94,16 @@ export default defineComponent({
                     <router-link :to="{name:'viewCategories'}">Categories</router-link>
                 </li>
                 <li>
-                    <a href="#ProductManagement" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Products</a>
-                    <ul class="collapse list-unstyled" id="ProductManagement">
-                        <li><a href="#">Manage Products</a></li>
-                        <li><a href="#">Add Products</a></li>
+                    <router-link :to="{name:'viewProduct'}">Products</router-link>
+                </li>
+                <li>
+                    <router-link :to="{name:'viewBatch'}">Batch</router-link>
+                </li>
+                <li>
+                    <a href="#Request" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Request</a>
+                    <ul class="collapse list-unstyled" id="Request">
+                        <li v-if="currentUser.user_level <= 1"><router-link :to="{name:'allRequest'}">All Requests</router-link></li>
+                        <li><router-link :to="{name:'selfRequest'}">Your Requests</router-link></li>
                     </ul>
                 </li>
             </ul>

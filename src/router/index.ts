@@ -13,6 +13,15 @@ import changePassword from '@/components/changePassword.vue'
 import categories from '@/components/category/categories.vue'
 import addCategory from '@/components/category/addCategory.vue'
 import editCategory from '@/components/category/editCategory.vue'
+import product from '@/components/product/product.vue'
+import addProduct from '@/components/product/addProduct.vue'
+import editProduct from '@/components/product/editProduct.vue'
+import batch from '@/components/batch/batch.vue'
+import addBatch from '@/components/batch/addBatch.vue'
+import editBatch from '@/components/batch/editBatch.vue'
+import addRequest from '@/components/request/addRequest.vue'
+import allRequest from '@/components/request/allRequest.vue'
+import yourRequest from '@/components/request/yourRequest.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -86,6 +95,51 @@ const router = createRouter({
           path: "categories/edit/:id",
           name: "editCategory",
           component: editCategory
+        },
+        {
+          path: "product",
+          name: "viewProduct",
+          component: product
+        },
+        {
+          path: "product/add",
+          name: "addProduct",
+          component: addProduct
+        },
+        {
+          path: "product/edit/:id",
+          name: "editProduct",
+          component: editProduct
+        },
+        {
+          path: "batch/",
+          name: "viewBatch",
+          component: batch
+        },
+        {
+          path: "batch/add/",
+          name: "addBatch",
+          component: addBatch
+        },
+        {
+          path: "batch/edit/:id",
+          name: "editBatch",
+          component: editBatch
+        },
+        {
+          path: "request/self",
+          name: "selfRequest",
+          component: yourRequest
+        },
+        {
+          path: "request/all",
+          name: "allRequest",
+          component: allRequest
+        },
+        {
+          path: "request/add",
+          name: "addRequest",
+          component: addRequest
         }
       ]
     }
