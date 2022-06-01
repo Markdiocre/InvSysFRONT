@@ -76,7 +76,7 @@ export default defineComponent({
 <template>
     <div class="wrapper">
         <div id="sidebar" :class="{'active': sideBarActive}">
-            <h1 class="sidebar-header text-center">Inventory Management System</h1>
+            <h1 class="sidebar-header text-center h1">Inventory Management System</h1>
             <ul class="list-unstyled components">
                 <li>
                     <router-link :to="{ name:'dashboard'}">Dashboard</router-link>

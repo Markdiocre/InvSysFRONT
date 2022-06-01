@@ -55,36 +55,38 @@ export default defineComponent({
 
 
 <template>
-    <div class="row mt-5">
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-8 bord p-5">
-            <h3 class="text-center">Edit Account</h3>
-            <form method="post" @submit.prevent="updateSelf">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" v-model="self.name">
-                    <label for="floatingInput">Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  v-model="self.username">
-                    <label for="floatingInput">Username</label>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-info" type="submit">Update</button>
+    <div class="container-fluid">
+        <div class="row mt-5">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8 bord p-5">
+                <h3 class="text-center">Edit Account</h3>
+                <form method="post" @submit.prevent="updateSelf">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" v-model="self.name">
+                        <label for="floatingInput">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control"  v-model="self.username">
+                        <label for="floatingInput">Username</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-info" type="submit">Update</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="d-grid gap-2">
+                                <router-link class="btn btn-danger" :to="{name:'newPassword'}">Change Password</router-link>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="d-grid gap-2">
-                            <router-link class="btn btn-danger" :to="{name:'newPassword'}">Change Password</router-link>
-                        </div>
-                    </div>
-                </div>
-                
-            </form>
-        </div>
-        <div class="col-md-2">
+                    
+                </form>
+            </div>
+            <div class="col-md-2">
+            </div>
         </div>
     </div>
 </template>

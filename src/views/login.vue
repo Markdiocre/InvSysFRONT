@@ -48,49 +48,52 @@ export default defineComponent({
 
 
 <template>
-    <div class="row login">
-        <div class="col-lg-12 d-flex align-items-center justify-content-center">
-            <div class="form-wrapper align-items-center justify-content-center text-center">
-                <h1 class="text-center title pb-5">Inventory Management and Monitoring System</h1>
-                <div class="row">
-                    <div class="col-sm m-3">
-                        <img src="@/assets/loginLogo.png" class="logo img-thumbnail  mx-auto  d-block" alt="Login Logo"/>
-                    </div>
-                    <div class="col-sm m-3 loginbord">
-                        <div class="d-flex align-items-center justify-content-center pt-5">
-                            <div class="p-5 form-wrapper align-items-center justify-content-center  pt-5">
-                                <div class="text-center">
-                                    <h1>Welcome!</h1>
+    <div class="container-fluid">
+        <div class="row login">
+            <div class=" d-flex align-items-center justify-content-center">
+                <div class="form-wrapper align-items-center justify-content-center text-center">
+                    <h1 class="text-center title pb-5 h1">Inventory Management and Monitoring System</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="@/assets/loginLogo.png" class="logo img-thumbnail mx-auto  d-block p1" alt="Login Logo"/>
+                        </div>
+                        <div class="col-md-6 bord">
+                            <div class="d-flex align-items-center justify-content-center pt-5">
+                                <div class="align-items-center justify-content-center  pt-5">
+                                    <div class="text-center">
+                                        <h1>Welcome!</h1>
+                                    </div>
+                                    <form method="post" @submit.prevent="login">
+                                        <div class="input-group pt-3">
+                                            <span class="input-group-text icon" for="floatingInput"><i class="bi bi-people-fill m-2 icons"></i></span>
+                                            <input type="text" class="form-control form-control-lg" v-model="username"  name="username" autocomplete="off" placeholder="Username">
+                                            
+                                        </div>
+                                        <div class="input-group pt-3">
+                                            <span class="input-group-text icon" for="floatingInput"><i class="bi bi-key-fill m-2 icons"></i></span>
+                                            <input type="password" class="form-control form-control-lg" v-model="password" name="password" placeholder="Password">
+                                            
+                                        </div>
+                                        <div class="d-grid gap-2 pt-3">
+                                            <button class="btn btn-outline-danger btn-lg" type="submit">Log In</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <form method="post" @submit.prevent="login">
-                                    <div class="input-group pt-3">
-                                        <span class="input-group-text icon" for="floatingInput"><i class="bi bi-people-fill m-2 icons"></i></span>
-                                        <input type="text" class="form-control form-control-lg" v-model="username"  name="username" autocomplete="off" placeholder="Username">
-                                        
-                                    </div>
-                                    <div class="input-group pt-3">
-                                        <span class="input-group-text icon" for="floatingInput"><i class="bi bi-key-fill m-2 icons"></i></span>
-                                        <input type="password" class="form-control form-control-lg" v-model="password" name="password" placeholder="Password">
-                                        
-                                    </div>
-                                    <div class="d-grid gap-2 pt-3">
-                                        <button class="btn btn-outline-danger btn-lg" type="submit">Log In</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
-                
             </div>
         </div>
+        
     </div>
 </template>
 
 <style scoped>
 *{
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0px !important;
+        padding: 0px !important;
     }
     .logo{
         width: 500px !important;
@@ -100,7 +103,7 @@ export default defineComponent({
     }
 
     .login{
-        max-width: 100%;
+        max-width: 100% !important;
         min-height: 100vh;
     }
 

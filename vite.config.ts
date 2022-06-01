@@ -6,7 +6,8 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), VitePWA({
+  plugins: [vue()
+    , VitePWA({
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],  
       manifest: {
         name: 'Inventory Management System',
@@ -35,7 +36,8 @@ export default defineConfig({
       workbox: {
         cleanupOutdatedCaches: false ,
         sourcemap: true
-      }
+      },
+      registerType: 'autoUpdate'
   })],
   resolve: {
     alias: {

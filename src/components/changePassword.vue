@@ -52,35 +52,37 @@ export default defineComponent({
 
 
 <template>
-    <div class="row mt-5">
-        <div class="col-md-2">
-        </div>
-        <div class="col-md-8 bord p-5">
-            <h3 class="text-center">Edit Account</h3>
-            <form method="post" @submit.prevent="changePass">
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" v-model="current_password">
-                    <label for="floatingInput">Current Password</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" v-model="new_password">
-                    <label for="floatingInput">New Password</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" v-model="re_new_password">
-                    <label for="floatingInput">Re-type New Password</label>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-info" type="submit">Update</button>
+    <div class="container-fluid">
+        <div class="row mt-5">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8 bord p-5">
+                <h3 class="text-center">Edit Account</h3>
+                <form method="post" @submit.prevent="changePass">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" v-model="current_password">
+                        <label for="floatingInput">Current Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" v-model="new_password">
+                        <label for="floatingInput">New Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" v-model="re_new_password">
+                        <label for="floatingInput">Re-type New Password</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-info" type="submit">Update</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-            </form>
-        </div>
-        <div class="col-md-2">
+                    
+                </form>
+            </div>
+            <div class="col-md-2">
+            </div>
         </div>
     </div>
 </template>
