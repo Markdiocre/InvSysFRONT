@@ -100,8 +100,8 @@ export default defineComponent({
         padding: 0px !important;
     }
     .logo{
-        width: 500px !important;
-        height: 500px !important;
+        width: 400px !important;
+        height: 400px !important;
         background-color: transparent;
         border-color: transparent;
     }
