@@ -55,7 +55,7 @@ export default defineComponent({
                     <h1 class="text-center title pb-5 h1">Inventory Management and Monitoring System</h1>
                     <div class="row">
                         <div class="col-md-6">
-                            <img src="@/assets/loginLogo.png" class="logo img-thumbnail mx-auto  d-block p1" alt="Login Logo"/>
+                            <img src="@/assets/loginLogo.png" class="logo img-thumbnail mx-auto  d-block p-3" alt="Login Logo"/>
                         </div>
                         <div class="col-md-6 bord">
                             <div class="d-flex align-items-center justify-content-center pt-5">
