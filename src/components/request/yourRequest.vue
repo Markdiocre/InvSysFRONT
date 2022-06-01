@@ -66,40 +66,50 @@ export default defineComponent({
             }
         }
 
-        function revertRequest(id :any){
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.delete('v1/request/'+id+'/',{
-                        headers:{
-                            Authorization: 'token '+ store.getToken.token
-                        }
-                    }).then(()=>{
-                        Swal.fire(
-                            {
-                            icon: 'success',
-                            title: 'Success!',
-                            text:'Request successfully reverted!'
+        function revertRequest(request :any){
+            if(request.is_approved == true){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Waning!',
+                    text: 'Approved Request cannot be reverted! Please contact an admin to disapprove your request before reverting'
+                })
+            }else{
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, revert it!'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete('v1/request/'+request.request_id+'/',{
+                            headers:{
+                                Authorization: 'token '+ store.getToken.token
                             }
-                        )
-                        selfRequest()
-                    }).catch(()=>{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
+                        }).then(()=>{
+                            Swal.fire(
+                                {
+                                icon: 'success',
+                                title: 'Success!',
+                                text:'Request successfully reverted!'
+                                }
+                            )
+                            selfRequest()
+                        }).catch((err)=>{
+                            console.log(err)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            })
                         })
-                    })
-                    
-                }
-            })
+                        
+                    }
+                })
+            }
+            
         }
 
         onMounted(()=>{
@@ -131,15 +141,17 @@ export default defineComponent({
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Request Date</th>
+                        <th>Approved</th>
                         <th>Action</th>
                     </thead>
                     <tbody>
                         <tr v-for="request in requests" :key="request.request_id">
-                            <td>{{findBatchEquivalent(request.batch)}}</td>
-                            <td>{{findProductEquivalent(request.product)}}</td>
+                            <td>{{request.get_batch_name}}</td>
+                            <td>{{request.get_product_name}}</td>
                             <td>{{request.quantity}}</td>
                             <td>{{translateDate(request.request_date)}}</td>
-                            <td><button class="btn btn-danger" @click="revertRequest(request.request_id)"><i class="bi bi-backspace-fill me-2"></i>Revert</button></td>
+                            <td>{{request.is_approved ? 'Yes': 'No'}}</td>
+                            <td><button class="btn btn-danger" @click="revertRequest(request)"><i class="bi bi-backspace-fill me-2"></i>Revert</button></td>
                         </tr>
                     </tbody>
                 </table>

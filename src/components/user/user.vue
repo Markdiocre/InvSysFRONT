@@ -39,14 +39,6 @@ export default defineComponent({
             })
         }
 
-        function findUserLevelEquivalent(user_level: any){
-            for(var i = 0; i < userGroups.value.length; i++){
-                if(userGroups.value[i].user_group_id === user_level ){
-                    return userGroups.value[i].group_name
-                }
-            }
-        }
-
         function translateDate(date: any){
             return moment(date).format('LLLL')
         }
@@ -97,7 +89,6 @@ export default defineComponent({
             store,
             users,
             userGroups,
-            findUserLevelEquivalent,
             translateDate,
             deleteUser
         }
@@ -127,7 +118,7 @@ export default defineComponent({
                         <tr v-for="user in users" :key="user.user_id">
                             <td>{{user.name}}</td>
                             <td>{{user.username}}</td>
-                            <td >{{findUserLevelEquivalent(user.user_level)}}</td>
+                            <td>{{user.user_group_name}}</td>
                             <td>{{user.is_active  ? 'active' : 'inactive'}}</td>
                             <td>{{translateDate(user.last_login)}}</td>
                             <td><router-link :to="{name:'editUser', params:{id:user.user_id}}" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button @click="deleteUser(user.user_id)" class="btn btn-danger"><i class="bi bi-trash3-fill"></i>Delete</button></td>

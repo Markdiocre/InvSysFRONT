@@ -3,6 +3,7 @@ import { userToken } from '@/stores/token'
 import { defineComponent,onMounted,ref } from 'vue'
 import axios from 'axios'
 import moment from 'moment'
+import Swal from 'sweetalert2'
 
 export default defineComponent({
     props:{
@@ -62,41 +63,6 @@ export default defineComponent({
             })
         }
 
-        function findProductEquivalent(product: any){
-            for(var i = 0; i < products.value.length; i++){
-                if(products.value[i].product_id === product ){
-                    return products.value[i].name
-                }
-            }
-        }
-
-        function findBatchEquivalent(batch: any){
-            for(var i = 0; i < batches.value.length; i++){
-                if(batches.value[i].batch_id === batch ){
-                    return batches.value[i].batch_name
-                }
-            }
-        }
-
-        function findUserEquivalent(user: any):any{
-            console.log(user)
-            for(var i = 0; i < users.value.length; i++){
-                if(users.value[i].user_id === user ){
-                    return {name:users.value[i].name,
-                            user_level: users.value[i].user_level
-                            }
-                }
-            }
-        }
-
-        function findUserLevelEquivalent(user_level: any){
-            for(var i = 0; i < userGroups.value.length; i++){
-                if(userGroups.value[i].user_group_id === user_level ){
-                    return userGroups.value[i].group_name
-                }
-            }
-        }
-
         function getUserGroups(){
             axios.get('v1/user-group/',{
                 headers:{
@@ -105,6 +71,69 @@ export default defineComponent({
             }).then((res)=>{
                 userGroups.value = res.data
             })
+        }
+
+        function approve(request: any){
+            console.log(request)
+            if(request.is_approved == false){
+                axios.patch('v1/request/'+request.request_id+'/',{
+                    is_approved: true
+                },{
+                    headers:{
+                        Authorization: 'token '+ store.getToken.token
+                    }
+                }).then((res)=>{
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'You\'ve succesfully requested!'
+                    })
+                    selfRequest()
+                }).catch((err)=>{
+                    console.log(err)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: err.response.data,
+                    })
+                })
+            }else{
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, revert it!'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.patch('v1/request/'+request.request_id+'/',{
+                            is_approved: false
+                        },{
+                            headers:{
+                                Authorization: 'token '+ store.getToken.token
+                            }
+                        }).then(()=>{
+                            Swal.fire(
+                                {
+                                icon: 'success',
+                                title: 'Success!',
+                                text:'Request successfully reverted!'
+                                }
+                            )
+                            selfRequest()
+                        }).catch(()=>{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            })
+                        })
+                        
+                    }
+                })
+            }
         }
 
         onMounted(()=>{
@@ -116,7 +145,7 @@ export default defineComponent({
         })
 
         return{
-            requests, translateDate,findProductEquivalent,findBatchEquivalent, findUserEquivalent,findUserLevelEquivalent
+            requests, translateDate, approve
         }
 
     },
@@ -139,16 +168,19 @@ export default defineComponent({
                         <th>Request Date</th>
                         <th>Requested By</th>
                         <th>Department</th>
+                        <th>Approved</th>
+                        <th>Actions</th>
                     </thead>
                     <tbody>
                         <tr v-for="request in requests" :key="request.request_id">
-                            <td>{{findBatchEquivalent(request.batch)}}</td>
-                            <td>{{findProductEquivalent(request.product)}}</td>
+                            <td>{{request.get_batch_name}}</td>
+                            <td>{{request.get_product_name}}</td>
                             <td>{{request.quantity}}</td>
                             <td>{{translateDate(request.request_date)}}</td>
-                            <td>{{findUserEquivalent(request.user).name}}</td>
-                            <td>{{findUserLevelEquivalent(findUserEquivalent(request.user).user_level)}}</td>
-                        
+                            <td>{{request.get_user_name}}</td>
+                            <td>{{request.get_user_department}}</td>
+                            <td>{{request.is_approved ? 'Yes': 'No'}}</td>
+                            <td><button class="btn btn-success" v-if="request.is_approved == false" @click="approve(request)">Approve</button><button class="btn btn-danger" v-else  @click="approve(request)">Revert</button></td>
                         </tr>
                     </tbody>
                 </table>

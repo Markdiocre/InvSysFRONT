@@ -28,9 +28,9 @@ export default defineComponent({
 
         onMounted(()=>{
             axios.get('v1/auth/users/me/',{
-            headers:{
-                Authorization: 'token '+ store.getToken.token
-            }
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
             }).then((res)=>{
                 currentUser.value = res.data
             }).catch((err)=>{
@@ -76,12 +76,12 @@ export default defineComponent({
 <template>
     <div class="wrapper">
         <div id="sidebar" :class="{'active': sideBarActive}">
-            <h1 class="sidebar-header text-center">Inventory System</h1>
+            <h1 class="sidebar-header text-center">Inventory Management System</h1>
             <ul class="list-unstyled components">
                 <li>
                     <router-link :to="{ name:'dashboard'}">Dashboard</router-link>
                 </li>
-                <div v-if="currentUser.user_level <= 1">
+                <div v-if="currentUser.user_level_equivalent <= 1">
                     <li>
                         <a href="#UserManagement" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">User Management</a>
                         <ul class="collapse list-unstyled" id="UserManagement">
@@ -97,12 +97,12 @@ export default defineComponent({
                     <router-link :to="{name:'viewProduct'}">Products</router-link>
                 </li>
                 <li>
-                    <router-link :to="{name:'viewBatch'}">Batch</router-link>
+                    <router-link :to="{name:'viewBatch'}">Inventory</router-link>
                 </li>
                 <li>
                     <a href="#Request" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Request</a>
                     <ul class="collapse list-unstyled" id="Request">
-                        <li v-if="currentUser.user_level <= 1"><router-link :to="{name:'allRequest'}">All Requests</router-link></li>
+                        <li v-if="currentUser.user_level_equivalent <= 1"><router-link :to="{name:'allRequest'}">All Requests</router-link></li>
                         <li><router-link :to="{name:'selfRequest'}">Your Requests</router-link></li>
                     </ul>
                 </li>

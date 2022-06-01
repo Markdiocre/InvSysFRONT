@@ -49,22 +49,6 @@ export default defineComponent({
             return moment(date).format('LLLL')
         }
 
-        function findUserEquivalent(user: any){
-            for(var i = 0; i < users.value.length; i++){
-                if(users.value[i].user_id === user ){
-                    return users.value[i].name
-                }
-            }
-        }
-
-        function findProductEquivalent(product: any){
-            for(var i = 0; i < products.value.length; i++){
-                if(products.value[i].product_id === product ){
-                    return products.value[i].name
-                }
-            }
-        }
-
         function delBatch(id : any){
             Swal.fire({
                 title: 'Are you sure?',
@@ -109,7 +93,7 @@ export default defineComponent({
         })
 
         return {
-            batches,translateDate,findUserEquivalent,findProductEquivalent,delBatch
+            batches,translateDate,delBatch
         }
     },
 })
@@ -121,7 +105,7 @@ export default defineComponent({
         <div class="bord m-3">
             <div class="d-flex justify-content-between">
                 <h3 class="p-4">Batches</h3>
-                <router-link :to="{name: 'addBatch'}" class="btn btn-info m-4 p-2">Add New Batch</router-link>
+                <router-link :to="{name: 'addBatch'}" class="btn btn-info m-4 p-2" v-if="$props.currentUser.user_level_equivalent <= 1">Add New Batch</router-link>
             </div>
             <div class="table-responsive m-3">
                 <table class="table table-hover table-bordered " >
@@ -132,17 +116,17 @@ export default defineComponent({
                         <th>Expiration Date</th>
                         <th>Date Added</th>
                         <th>Added By</th>
-                        <th>Actions</th>
+                        <th v-if="$props.currentUser.user_level_equivalent <= 1">Actions</th>
                     </thead>
                     <tbody>
                         <tr v-for="batch in batches" :key="batch.batch_id">
                             <td>{{batch.batch_name}}</td>
-                            <td>{{findProductEquivalent(batch.product)}}</td>
+                            <td>{{batch.get_product_name}}</td>
                             <td>{{batch.quantity}}</td>
                             <td>{{batch.expiration_date == null ? 'No Expiration' : translateDate(batch.expiration_date)}}</td>
                             <td>{{translateDate(batch.date_added)}}</td>
-                            <td>{{findUserEquivalent(batch.user)}}</td>
-                            <td><router-link :to="{name: 'editBatch', params:{id: batch.batch_id}}" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="delBatch(batch.batch_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
+                            <td>{{batch.get_user_name}}</td>
+                            <td v-if="$props.currentUser.user_level_equivalent <= 1"><router-link :to="{name: 'editBatch', params:{id: batch.batch_id}}" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="delBatch(batch.batch_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
                         </tr>
                     </tbody>
                 </table>

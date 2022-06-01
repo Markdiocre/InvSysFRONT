@@ -48,7 +48,8 @@ export default defineComponent({
                 product: product.value,
                 batch: batch.value,
                 quantity: quantity.value,
-                user: props.currentUser.user_id
+                user: props.currentUser.user_id,
+                is_approved : false
             },{
                 headers:{
                     Authorization: 'token '+ store.getToken.token

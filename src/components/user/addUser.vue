@@ -54,6 +54,7 @@ export default defineComponent({
                 })
                 router.push({name:"viewUser"})
             }).catch((err: any)=>{
+                console.log(err)
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

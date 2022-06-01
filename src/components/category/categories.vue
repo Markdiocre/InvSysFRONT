@@ -78,18 +78,18 @@ export default defineComponent({
         <div class="bord m-3">
             <div class="d-flex justify-content-between">
                 <h3 class="p-4">Categories</h3>
-                <router-link :to="{name: 'addCategory'}" class="btn btn-info m-4 p-2">Add New Categories</router-link>
+                <router-link :to="{name: 'addCategory'}" class="btn btn-info m-4 p-2" v-if="$props.currentUser.user_level_equivalent <= 1">Add New Categories</router-link>
             </div>
             <div class="container-fluid p-3 text-center table-responsive">
                 <table class="table table-hover ">
                     <thead>
                         <th>Name</th>
-                        <th>Actions</th>
+                        <th v-if="$props.currentUser.user_level_equivalent <= 1">Actions</th>
                     </thead>
                     <tbody>
                         <tr v-for="category in categories" :key="category.category_id">
                             <td>{{category.name}}</td>
-                            <td><router-link :to="{name: 'editCategory', params:{ id: category.category_id} }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="deleteCategory(category.category_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
+                            <td v-if="$props.currentUser.user_level_equivalent <= 1"><router-link :to="{name: 'editCategory', params:{ id: category.category_id} }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="deleteCategory(category.category_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
                         </tr>
                     </tbody>
                 </table>
