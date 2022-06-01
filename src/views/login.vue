@@ -54,8 +54,12 @@ export default defineComponent({
                 <div class="form-wrapper align-items-center justify-content-center text-center">
                     <h1 class="text-center title pb-5 h1">Inventory Management and Monitoring System</h1>
                     <div class="row">
-                        <div class="col-md-6">
-                            <img src="@/assets/loginLogo.png" class="logo img-thumbnail mx-auto  d-block p-3" alt="Login Logo"/>
+                        <div class="col-md-6 ">
+                            <div class="p-3">
+
+                            
+                                <img src="@/assets/loginLogo.png" class="logo img-thumbnail mx-auto  d-block " alt="Login Logo"/>
+                            </div>
                         </div>
                         <div class="col-md-6 bord">
                             <div class="d-flex align-items-center justify-content-center pt-5">
