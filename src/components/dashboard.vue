@@ -10,7 +10,7 @@ export default defineComponent({
 
         let data = ref({} as  any)
         let reqs = ref({} as any)
-        let batches = ref({} as any)
+        let products = ref({} as any)
         let headers = {
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -19,13 +19,11 @@ export default defineComponent({
             axios.all([
                 axios.get('v1/dashboard/',{headers: headers}),
                 axios.get('v1/request/recent/',{headers: headers}),
-                axios.get('v1/batch/recent/',{headers: headers})
-            ]).then(axios.spread((dashboard, request, batch)=>{
+                axios.get('v1/product/recent/',{headers: headers})
+            ]).then(axios.spread((dashboard, request, product)=>{
                 data.value = dashboard.data
                 reqs.value = request.data
-                batches.value = batch.data
-
-                console.log(reqs.value)
+                products.value = product.data
             }))
         }
 
@@ -34,7 +32,7 @@ export default defineComponent({
         })
 
         return{
-            data, reqs,batches
+            data, reqs,products
         }
     }
 })
@@ -138,18 +136,16 @@ export default defineComponent({
 
                 <div class="col-lg-6">
                     <div class="m-3 p-3 bord">
-                        <h2>Recent Batches</h2>
+                        <h2>Recent Products</h2>
                         <table class="table table-hovered text-start">
                             <thead>
-                                <th>Batch Name</th>
+                                <th>Name</th>
                                 <th>Quantity</th>
-                                <th>Product</th>
                             </thead>
                             <tbody>
-                                <tr v-for="batch in batches" :key="batch.batch_id">
-                                    <td>{{batch.batch_name}}</td>
-                                    <td>{{batch.quantity}}</td>
-                                    <td>{{batch.get_product_name}}</td>
+                                <tr v-for="prod in products" :key="prod.product_id">
+                                    <td>{{prod.name}}</td>
+                                    <td>{{prod.total_quantity}}</td>
                                 </tr>
                             </tbody>
                         </table>
