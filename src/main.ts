@@ -16,8 +16,8 @@ const updateSW = registerSW({
 
 
 const app = createApp(App);
-// axios.defaults.baseURL = 'https://invsys-api.herokuapp.com/';
-axios.defaults.baseURL = 'http://127.0.0.1:8000/';
+axios.defaults.baseURL = 'https://invsys-api.herokuapp.com/';
+// axios.defaults.baseURL = 'http://127.0.0.1:8000/';
 
 app.use(createPinia());
 app.use(router);
