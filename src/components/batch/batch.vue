@@ -7,43 +7,22 @@ import Swal from 'sweetalert2'
 
 export default defineComponent({
     props:['currentUser'],
-    setup() {
+    setup(props) {
         const store = userToken()
 
-        let batches = ref({} as any)
-        let users = ref({} as any)
-        let products = ref({} as any)
-
-
-        function getProducts(){
-            axios.get('v1/product/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                products.value = res.data
-            })
-        }
+        let page = ref({} as any)
 
         function getBatches(){
-            axios.get('v1/batch/',{
+            axios.get('v1/inventory/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                batches.value = res.data
+                page.value = res.data
+                console.log(page.value)
             })
         }
 
-        function getUsers(){
-            axios.get('v1/auth/users/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                users.value = res.data
-            })
-        }
 
         function translateDate(date: any){
             return moment(date).format('LLLL')
@@ -85,15 +64,23 @@ export default defineComponent({
             })
         }
         
+        function flipPage(url : any){
+            axios.get(url,{
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
+            }).then((res)=>{
+                page.value = res.data
+                
+            })
+        }
 
         onMounted(()=>{
             getBatches()
-            getUsers()
-            getProducts()
         })
 
         return {
-            batches,translateDate,delBatch
+            page,translateDate,delBatch, flipPage
         }
     },
 })
@@ -104,33 +91,41 @@ export default defineComponent({
     <div class="container-fluid">
         <div class="bord m-3">
             <div class="d-flex justify-content-between">
-                <h3 class="p-4">Batches</h3>
-                <router-link :to="{name: 'addBatch'}" class="btn btn-info m-4 p-2" v-if="$props.currentUser.user_level_equivalent <= 1">Add New Batch</router-link>
+                <h3 class="p-4">Inventory</h3>
+                <router-link :to="{name: 'addBatch'}" class="btn btn-info m-4 p-2">Add New Batch</router-link>
             </div>
             <div class="table-responsive m-3">
                 <table class="table table-hover table-bordered " >
                     <thead >
-                        <th>Batch Name</th>
+                        <th>Reference No.</th>
                         <th>Product</th>
+                        <th>Category</th>
                         <th>Quantity</th>
                         <th>Expiration Date</th>
-                        <th>Date Added</th>
+                        <th>Date Purchased</th>
                         <th>Added By</th>
-                        <th v-if="$props.currentUser.user_level_equivalent <= 1">Actions</th>
+                        <th>Actions</th>
                     </thead>
                     <tbody>
-                        <tr v-for="batch in batches" :key="batch.batch_id">
-                            <td>{{batch.batch_name}}</td>
+                        <tr v-for="batch in page.results" :key="batch.inventory_id">
+                            <td>{{batch.inventory_id}}</td>
                             <td>{{batch.get_product_name}}</td>
+                            <td>{{batch.get_category_name}}</td>
                             <td>{{batch.quantity}}</td>
                             <td>{{batch.expiration_date == null ? 'No Expiration' : translateDate(batch.expiration_date)}}</td>
-                            <td>{{translateDate(batch.date_added)}}</td>
+                            <td>{{translateDate(batch.date_purchased)}}</td>
                             <td>{{batch.get_user_name}}</td>
-                            <td v-if="$props.currentUser.user_level_equivalent <= 1"><router-link :to="{name: 'editBatch', params:{id: batch.batch_id}}" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="delBatch(batch.batch_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
+                            <td><router-link :to="{name: 'editBatch', params:{id: batch.inventory_id}}" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="delBatch(batch.batch_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <nav>
+                <ul class="pagination p-3">
+                    <li class="page-item" :class="{'disabled':(page.previous == null)}"><button class="page-link" @click="flipPage(page.previous)">Previous</button></li>
+                    <li class="page-item" :class="{'disabled':(page.next == null)}"><button class="page-link" @click="flipPage(page.next)">Next</button></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </template>

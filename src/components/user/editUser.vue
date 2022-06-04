@@ -67,16 +67,16 @@ export default defineComponent({
             })
         }
 
+        
+
         onMounted(()=>{
             getUser()
             getUserGroups()
         })
+
         return{
-            store,
             userGroups,
             user,
-            getUser,
-            getUserGroups,
             putUser
         }
     }
@@ -101,7 +101,7 @@ export default defineComponent({
                 <select class="form-select form-floating mb-3" v-model="user.user_level">
                     <option v-for="group in userGroups" :key="group.group_id" :value="group.user_group_id">{{group.group_name}}</option>
                 </select>
-                <select class="form-select" aria-label="Default select example" name="group_status" v-model="user.is_active">
+                <select class="form-select" name="group_status" v-model="user.is_active">
                     <option value="false">Inactive</option>
                     <option value="true">Active</option>
                 </select>

@@ -19,7 +19,7 @@ export default defineComponent({
         let categories = ref({} as any)
 
         function getCategories(){
-            axios.get('v1/category/',{
+            axios.get('v1/category/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -47,6 +47,7 @@ export default defineComponent({
                 })
                 router.push({name:"viewProduct"})
             }).catch((err)=>{
+                console.log(err)
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

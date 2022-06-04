@@ -12,9 +12,7 @@ export default defineComponent({
     setup(props) {
         const store = userToken()
         
-        let requests = ref([] as any)
-        let products = ref({} as any)
-        let batches = ref({} as any)
+        let page = ref([] as any)
 
         function selfRequest(){
             axios.get('v1/request/',{
@@ -22,7 +20,8 @@ export default defineComponent({
                     Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                requests.value = res.data.filter((request:any) => request.user == props.currentUser.user_id)
+                page.value = res.data
+                page.value.results = page.value.results.filter((request:any) => request.user == props.currentUser.user_id)
             })
         }
 
@@ -30,41 +29,6 @@ export default defineComponent({
             return moment(date).format('LLLL')
         }
 
-        function getProducts(){
-            axios.get('v1/product/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                products.value = res.data
-            })
-        }
-
-        function getBatches(){
-            axios.get('v1/batch/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                batches.value = res.data
-            })
-        }
-
-        function findProductEquivalent(product: any){
-            for(var i = 0; i < products.value.length; i++){
-                if(products.value[i].product_id === product ){
-                    return products.value[i].name
-                }
-            }
-        }
-
-        function findBatchEquivalent(batch: any){
-            for(var i = 0; i < batches.value.length; i++){
-                if(batches.value[i].batch_id === batch ){
-                    return batches.value[i].batch_name
-                }
-            }
-        }
 
         function revertRequest(request :any){
             if(request.is_approved == true){
@@ -81,7 +45,7 @@ export default defineComponent({
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, revert it!'
+                    confirmButtonText: 'Yes, cancel it!'
                     }).then((result) => {
                     if (result.isConfirmed) {
                         axios.delete('v1/request/'+request.request_id+'/',{
@@ -112,14 +76,22 @@ export default defineComponent({
             
         }
 
+        function flipPage(url : any){
+            axios.get(url,{
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
+            }).then((res)=>{
+                page.value = res.data
+            })
+        }
+
         onMounted(()=>{
             selfRequest()
-            getBatches()
-            getProducts()
         })
 
         return{
-            requests, translateDate,findProductEquivalent,findBatchEquivalent, revertRequest
+            page, translateDate, revertRequest, flipPage
         }
 
     },
@@ -137,25 +109,31 @@ export default defineComponent({
             <div class="table-responsive m-3 text-center">
                 <table class="table table-hover table-bordered">
                     <thead>
-                        <th>Batch</th>
+                        <th>Inventory Reference No.</th>
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Request Date</th>
-                        <th>Approved</th>
+                        <th>Remarks</th>
                         <th>Action</th>
                     </thead>
                     <tbody>
-                        <tr v-for="request in requests" :key="request.request_id">
-                            <td>{{request.get_batch_name}}</td>
+                        <tr v-for="request in page.results" :key="request.request_id">
+                            <td>{{request.get_inventory_name}}</td>
                             <td>{{request.get_product_name}}</td>
                             <td>{{request.quantity}}</td>
                             <td>{{translateDate(request.request_date)}}</td>
-                            <td>{{request.is_approved ? 'Yes': 'No'}}</td>
-                            <td><button class="btn btn-danger" @click="revertRequest(request)"><i class="bi bi-backspace-fill me-2"></i>Revert</button></td>
+                            <td>{{request.get_remarks}}</td>
+                            <td><button class="btn btn-danger" @click="revertRequest(request)"><i class="bi bi-backspace-fill me-2"></i>Cancel</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <nav>
+                <ul class="pagination p-3">
+                    <li class="page-item" :class="{'disabled':(page.previous == null)}"><button class="page-link" @click="flipPage(page.previous)">Previous</button></li>
+                    <li class="page-item" :class="{'disabled':(page.next == null)}"><button class="page-link" @click="flipPage(page.next)">Next</button></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </template>

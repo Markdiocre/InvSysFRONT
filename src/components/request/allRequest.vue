@@ -12,11 +12,7 @@ export default defineComponent({
     setup(props) {
         const store = userToken()
         
-        let requests = ref([] as any)
-        let products = ref({} as any)
-        let batches = ref({} as any)
-        let users = ref({} as any)
-        let userGroups = ref({} as any)
+        let page = ref([] as any)
 
         function selfRequest(){
             axios.get('v1/request/',{
@@ -24,7 +20,7 @@ export default defineComponent({
                     Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                requests.value = res.data
+                page.value = res.data
             })
         }
 
@@ -32,120 +28,108 @@ export default defineComponent({
             return moment(date).format('LLLL')
         }
 
-        function getUsers(){
-            axios.get('v1/auth/users/',{
+        function reject(id: any){
+            axios.patch('v1/request/'+id+'/',{
+                remarks: 'a'
+            },{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                users.value = res.data
-            })
-        }
-
-
-        function getProducts(){
-            axios.get('v1/product/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                products.value = res.data
-            })
-        }
-
-        function getBatches(){
-            axios.get('v1/batch/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                batches.value = res.data
-            })
-        }
-
-        function getUserGroups(){
-            axios.get('v1/user-group/',{
-                headers:{
-                    Authorization: 'token '+ store.getToken.token
-                }
-            }).then((res)=>{
-                userGroups.value = res.data
-            })
-        }
-
-        function approve(request: any){
-            console.log(request)
-            if(request.is_approved == false){
-                axios.patch('v1/request/'+request.request_id+'/',{
-                    is_approved: true
-                },{
-                    headers:{
-                        Authorization: 'token '+ store.getToken.token
-                    }
-                }).then((res)=>{
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'You\'ve succesfully requested!'
-                    })
-                    selfRequest()
-                }).catch((err)=>{
-                    console.log(err)
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: err.response.data,
-                    })
-                })
-            }else{
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, revert it!'
-                    }).then((result) => {
-                    if (result.isConfirmed) {
-                        axios.patch('v1/request/'+request.request_id+'/',{
-                            is_approved: false
-                        },{
-                            headers:{
-                                Authorization: 'token '+ store.getToken.token
-                            }
-                        }).then(()=>{
-                            Swal.fire(
-                                {
-                                icon: 'success',
-                                title: 'Success!',
-                                text:'Request successfully reverted!'
-                                }
-                            )
-                            selfRequest()
-                        }).catch(()=>{
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Something went wrong!',
-                            })
-                        })
-                        
-                    }
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'You\'ve succesfully requested!'
                 })
-            }
+                selfRequest()
+            }).catch((err)=>{
+                console.log(err)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data,
+                })
+            })
+        }
+
+        function revert(id:  any){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, revert it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.patch('v1/request/'+id+'/',{
+                        remarks: 'p'
+                    },{
+                        headers:{
+                            Authorization: 'token '+ store.getToken.token
+                        }
+                    }).then(()=>{
+                        Swal.fire(
+                            {
+                            icon: 'success',
+                            title: 'Success!',
+                            text:'Request successfully reverted!'
+                            }
+                        )
+                        selfRequest()
+                    }).catch(()=>{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        })
+                    })
+                    
+                }
+            })
+        }
+
+        function approve(id: any){
+            axios.patch('v1/request/'+id+'/',{
+                remarks: 'a'
+            },{
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
+            }).then((res)=>{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'You\'ve succesfully requested!'
+                })
+                selfRequest()
+            }).catch((err)=>{
+                console.log(err)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data,
+                })
+            })
+        }
+
+        function flipPage(url : any){
+            axios.get(url,{
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
+            }).then((res)=>{
+                page.value = res.data
+            })
         }
 
         onMounted(()=>{
             selfRequest()
-            getBatches()
-            getProducts()
-            getUsers()
-            getUserGroups()
         })
 
         return{
-            requests, translateDate, approve
+            page, translateDate, approve, flipPage, reject,revert
         }
 
     },
@@ -162,29 +146,44 @@ export default defineComponent({
             <div class="table-responsive m-3 text-center">
                 <table class="table table-hover table-bordered">
                     <thead>
-                        <th>Batch</th>
+                        <th>Inventory Reference No.</th>
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Request Date</th>
                         <th>Requested By</th>
                         <th>Department</th>
-                        <th>Approved</th>
+                        <th>Remarks</th>
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                        <tr v-for="request in requests" :key="request.request_id">
-                            <td>{{request.get_batch_name}}</td>
+                        <tr v-for="request in page.results" :key="request.request_id">
+                            <td>{{request.get_inventory_name}}</td>
                             <td>{{request.get_product_name}}</td>
                             <td>{{request.quantity}}</td>
                             <td>{{translateDate(request.request_date)}}</td>
                             <td>{{request.get_user_name}}</td>
                             <td>{{request.get_user_department}}</td>
-                            <td>{{request.is_approved ? 'Yes': 'No'}}</td>
-                            <td><button class="btn btn-success" v-if="request.is_approved == false" @click="approve(request)">Approve</button><button class="btn btn-danger" v-else  @click="approve(request)">Revert</button></td>
+                            <td>{{request.get_remarks}}</td>
+                            <td>
+                                <div v-if="request.remarks == 'p'">
+                                    <button class="btn btn-success" @click="approve(request.request_id)">Approve</button>
+                                    <button class="btn btn-warning m-1" @click="reject(request.request_id)">Reject</button>
+                                </div>
+                                <div v-else>
+                                    <button class="btn btn-danger" @click="revert(request.request_id)">Revert</button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+                <nav>
+                    <ul class="pagination p-3">
+                        <li class="page-item" :class="{'disabled':(page.previous == null)}"><button class="page-link" @click="flipPage(page.previous)">Previous</button></li>
+                        <li class="page-item" :class="{'disabled':(page.next == null)}"><button class="page-link" @click="flipPage(page.next)">Next</button></li>
+                    </ul>
+                </nav>
             </div>
         </div>
+        
     </div>
 </template>

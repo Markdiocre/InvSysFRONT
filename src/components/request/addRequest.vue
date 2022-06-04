@@ -24,7 +24,7 @@ export default defineComponent({
         let proxyBatches = ref({} as any)
 
         function getProducts(){
-            axios.get('v1/product/',{
+            axios.get('v1/product/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -34,7 +34,7 @@ export default defineComponent({
         }
 
         function getBatches(){
-            axios.get('v1/batch/',{
+            axios.get('v1/inventory/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -46,10 +46,10 @@ export default defineComponent({
         function makeRequest(){
             axios.post('v1/request/',{
                 product: product.value,
-                batch: batch.value,
+                inventory: batch.value,
                 quantity: quantity.value,
                 user: props.currentUser.user_id,
-                is_approved : false
+                remarks : 'p'
             },{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
@@ -102,7 +102,7 @@ export default defineComponent({
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>
                         </select>
                         <select class="form-select form-floating mb-3" v-model="batch">
-                            <option v-for="btch in proxyBatches" :key="btch.category_id" :value="btch.batch_id"><p>{{btch.batch_name}} ({{btch.quantity}})</p></option>
+                            <option v-for="btch in proxyBatches" :key="btch.inventory_id" :value="btch.inventory_id"><p>Reference No: {{btch.inventory_id}} - ({{btch.quantity}})</p></option>
                         </select>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" autocomplete="off" v-model="quantity">

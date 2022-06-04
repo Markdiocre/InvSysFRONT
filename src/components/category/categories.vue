@@ -9,7 +9,7 @@ export default defineComponent({
     setup() {
         const store = userToken()
 
-        let categories = ref({} as any)
+        let page = ref({} as any)
 
         function getCategories(){
             axios.get('v1/category/',{
@@ -17,7 +17,7 @@ export default defineComponent({
                     Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                categories.value = res.data
+                page.value = res.data
             })
         }
 
@@ -58,15 +58,25 @@ export default defineComponent({
             
         }
 
+        function flipPage(url : any){
+            axios.get(url,{
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
+            }).then((res)=>{
+                page.value = res.data
+            })
+        }
+
         onMounted(()=>{
             getCategories()
         })
 
         return{
             store,
-            categories,
-            getCategories,
-            deleteCategory
+            page,
+            deleteCategory,
+            flipPage
         }
     }
 })
@@ -77,29 +87,35 @@ export default defineComponent({
     <div class="container-fluid">
         <div class="bord m-3">
             <div class="d-flex justify-content-between">
-                <h3 class="p-4">Categories</h3>
-                <router-link :to="{name: 'addCategory'}" class="btn btn-info m-4 p-2" v-if="$props.currentUser.user_level_equivalent <= 1">Add New Categories</router-link>
+                <h3 class="py-4 ps-4">Categories</h3>
+                <router-link :to="{name: 'addCategory'}" class="btn btn-info m-4 p-2">Add New Categories</router-link>
             </div>
             <div class="container-fluid p-3 text-center table-responsive">
                 <table class="table table-hover ">
                     <thead>
                         <th>Name</th>
-                        <th v-if="$props.currentUser.user_level_equivalent <= 1">Actions</th>
+                        <th>Actions</th>
                     </thead>
                     <tbody>
-                        <tr v-for="category in categories" :key="category.category_id">
+                        <tr v-for="category in page.results" :key="category.category_id">
                             <td>{{category.name}}</td>
-                            <td v-if="$props.currentUser.user_level_equivalent <= 1"><router-link :to="{name: 'editCategory', params:{ id: category.category_id} }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="deleteCategory(category.category_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
+                            <td><router-link :to="{name: 'editCategory', params:{ id: category.category_id} }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="deleteCategory(category.category_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <nav>
+                <ul class="pagination p-3">
+                    <li class="page-item" :class="{'disabled':(page.previous == null)}"><button class="page-link" @click="flipPage(page.previous)">Previous</button></li>
+                    <li class="page-item" :class="{'disabled':(page.next == null)}"><button class="page-link" @click="flipPage(page.next)">Next</button></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </template>
 
 <style scoped>
-    button,a{
+    a{
         color: white !important;
     }
 </style>

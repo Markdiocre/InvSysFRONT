@@ -52,13 +52,11 @@ export default defineComponent({
         <div class="row login">
             <div class=" d-flex align-items-center justify-content-center">
                 <div class="form-wrapper align-items-center justify-content-center text-center">
-                    <h1 class="text-center title pb-5 h1">Inventory Management and Monitoring System</h1>
+                    <h1 class="text-center title p-5 h1">Inventory Management and Monitoring System</h1>
                     <div class="row">
                         <div class="col-md-6 ">
                             <div class="p-3">
-
-                            
-                                <img src="@/assets/loginLogo.png" class="logo img-thumbnail mx-auto  d-block " alt="Login Logo"/>
+                                <img src="@/assets/logo.png" class="logo img-thumbnail mx-auto  d-block " alt="Login Logo"/>
                             </div>
                         </div>
                         <div class="col-md-6 bord">
@@ -67,14 +65,14 @@ export default defineComponent({
                                     <div class="text-center">
                                         <h1>Welcome!</h1>
                                     </div>
-                                    <form method="post" @submit.prevent="login">
+                                    <form method="post" @submit.prevent="login" class="p-4">
                                         <div class="input-group pt-3">
-                                            <span class="input-group-text icon" for="floatingInput"><i class="bi bi-people-fill m-2 icons"></i></span>
+                                            <span class="input-group-text icon"><i class="bi bi-people-fill m-2 icons"></i></span>
                                             <input type="text" class="form-control form-control-lg" v-model="username"  name="username" autocomplete="off" placeholder="Username">
                                             
                                         </div>
                                         <div class="input-group pt-3">
-                                            <span class="input-group-text icon" for="floatingInput"><i class="bi bi-key-fill m-2 icons"></i></span>
+                                            <span class="input-group-text icon"><i class="bi bi-key-fill m-2 icons"></i></span>
                                             <input type="password" class="form-control form-control-lg" v-model="password" name="password" placeholder="Password">
                                             
                                         </div>
@@ -95,7 +93,8 @@ export default defineComponent({
 </template>
 
 <style scoped>
-*{
+    *{
+        box-sizing: border-box;
         margin: 0px !important;
         padding: 0px !important;
     }
@@ -130,5 +129,16 @@ export default defineComponent({
         font-family: 'Anton', sans-serif !important;
         font-size: 3rem;
         color:#315F99;
+    }
+
+    @media screen and (max-width: 400px){
+        .logo{
+            width: 200px !important;
+            height: 200px !important;
+        }
+
+        .title{
+            font-size: 1.5em;
+        }
     }
 </style>

@@ -15,15 +15,13 @@ export default defineComponent({
         const router = useRouter()
 
         let products = ref({} as any)
-
-        let batch_name = ref('')
         let product = ref('')
         let quantity = ref(0)
         let hasExpiration = ref(false)
         let expiration_date = ref('')
 
         function getProducts(){
-            axios.get('v1/product/',{
+            axios.get('v1/product/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -33,8 +31,7 @@ export default defineComponent({
         }
 
         function addBatch(){
-             axios.post('v1/batch/',{
-                batch_name: batch_name.value,
+             axios.post('v1/inventory/',{
                 product: product.value,
                 quantity: quantity.value,
                 expiration_date: hasExpiration.value ? moment(expiration_date.value).utcOffset("+08:00") : null,
@@ -51,6 +48,7 @@ export default defineComponent({
                 })
                 router.push({name:"viewBatch"})
             }).catch((err)=>{
+                console.log(err)
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -65,7 +63,6 @@ export default defineComponent({
 
         return {
             products,
-            batch_name,
             product,
             quantity,
             hasExpiration,
@@ -87,10 +84,6 @@ export default defineComponent({
                 <div class="col-md-4 bord ">
                     <h3 class="text-center p-3">Add New Batch</h3>
                     <form action="post" class="p-3" @submit.prevent="addBatch">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" autocomplete="off" v-model="batch_name">
-                            <label for="floatingInput">Batch Name</label>
-                        </div>
                         <select class="form-select form-floating mb-3" v-model="product">
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>
                         </select>

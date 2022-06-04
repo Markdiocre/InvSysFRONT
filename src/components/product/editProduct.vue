@@ -28,7 +28,7 @@ export default defineComponent({
         }
 
         function getCategories(){
-            axios.get('v1/category/',{
+            axios.get('v1/category/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }

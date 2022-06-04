@@ -22,6 +22,9 @@ import editBatch from '@/components/batch/editBatch.vue'
 import addRequest from '@/components/request/addRequest.vue'
 import allRequest from '@/components/request/allRequest.vue'
 import yourRequest from '@/components/request/yourRequest.vue'
+import monthly from "@/components/reports/monthly.vue";
+import quarterly from "@/components/reports/quarterly.vue";
+import yearly from "@/components/reports/yearly.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -140,6 +143,21 @@ const router = createRouter({
           path: "request/add",
           name: "addRequest",
           component: addRequest
+        },
+        {
+          path: "report/monthly",
+          name: "monthly",
+          component: monthly
+        },
+        {
+          path: "report/quarterly",
+          name: "quarterly",
+          component: quarterly
+        },
+        {
+          path: "report/yearly",
+          name: "yearly",
+          component: yearly
         }
       ]
     }

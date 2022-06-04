@@ -20,7 +20,7 @@ export default defineComponent({
         let last_login = moment().format('YYYY-MM-DD[T]HH:mm:ss')
 
         function getUserGroups(){
-            axios.get('v1/user-group/',{
+            axios.get('v1/user-group/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }

@@ -1,35 +1,27 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { userToken } from '@/stores/token'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
 export default defineComponent({
     props:['currentUser'],
-    setup(){
+    setup(props){
         const store = userToken()
-        return{
-            store
-        }
-    },
-    data(){
-        return{
-            usergroups : {} as any
-        }
-    },
-    methods:{
-        getUserGroups(){
+
+        let page = ref({} as any)
+
+        function getUserGroups(){
             axios.get('v1/user-group/',{
                 headers:{
-                    Authorization: 'token '+this.store.getToken.token
+                    Authorization: 'token '+ store.getToken.token
                 }
             }).then((res)=>{
-                this.usergroups = res.data
-            }).catch((err)=>{
-                console.log(err)
+                page.value = res.data
             })
-        },
-        deleteUserGroup(id: any){
+        }
+
+        function deleteUserGroup(id: any){
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -42,7 +34,7 @@ export default defineComponent({
                 if (result.isConfirmed) {
                     axios.delete('v1/user-group/'+id,{
                         headers:{
-                            Authorization: 'token '+this.store.getToken.token
+                            Authorization: 'token '+ store.getToken.token
                         }
                     }).then(()=>{
                         Swal.fire(
@@ -52,13 +44,12 @@ export default defineComponent({
                             text:'User Group successfully deleted!'
                             }
                         )
-                        this.getUserGroups()
+                        getUserGroups()
                     }).catch(()=>{
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
                             text: 'Something went wrong!',
-                            footer: '<a href="">Why do I have this issue?</a>'
                         })
                     })
                     
@@ -66,9 +57,26 @@ export default defineComponent({
             })
             
         }
-    },
-    mounted(){
-        this.getUserGroups()
+
+        function flipPage(url : any){
+            axios.get(url,{
+                headers:{
+                    Authorization: 'token '+ store.getToken.token
+                }
+            }).then((res)=>{
+                page.value = res.data
+            })
+        }
+
+        onMounted(()=>{
+            getUserGroups()
+        })
+
+        return{
+            page, 
+            deleteUserGroup, 
+            flipPage
+        }
     }
 })
 </script>
@@ -91,7 +99,7 @@ export default defineComponent({
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            <tr v-for="group in usergroups" :key="group.user_group_id">
+                            <tr v-for="group in page.results" :key="group.user_group_id">
                                 <td>{{group.group_name}}</td>
                                 <td>{{group.group_level}}</td>
                                 <td>{{group.group_status ? 'Active' : 'Inactive' }}</td>
@@ -100,6 +108,12 @@ export default defineComponent({
                         </tbody>
                     </table>
                 </div>
+                <nav>
+                    <ul class="pagination p-3">
+                        <li class="page-item" :class="{'disabled':(page.previous == null)}"><button class="page-link" @click="flipPage(page.previous)">Previous</button></li>
+                        <li class="page-item" :class="{'disabled':(page.next == null)}"><button class="page-link" @click="flipPage(page.next)">Next</button></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

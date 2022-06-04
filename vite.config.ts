@@ -8,7 +8,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [vue()
     , VitePWA({
-      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],  
+      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],  
       manifest: {
         name: 'Inventory Management System',
         short_name: 'IMS',
@@ -32,13 +32,9 @@ export default defineConfig({
             purpose: 'any maskable',
           }
         ]
-      },
-      workbox: {
-        cleanupOutdatedCaches: false ,
-        sourcemap: true
-      },
-      registerType: 'autoUpdate'
-  })],
+      }
+  })
+],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

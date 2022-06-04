@@ -80,7 +80,7 @@ export default defineComponent({
                     <input type="number" class="form-control"  placeholder="name@example.com" name="group_level" min="0" v-model="userGroup.group_level">
                     <label for="floatingInput">Group Level</label>
                 </div>
-                <select class="form-select" aria-label="Default select example" name="group_status" v-model="userGroup.group_status">
+                <select class="form-select" name="group_status" v-model="userGroup.group_status">
                     <option value="false">Inactive</option>
                     <option value="true">Active</option>
                 </select>

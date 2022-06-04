@@ -20,7 +20,7 @@ export default defineComponent({
         let hasExpiration = ref(false)
 
         function getBatch(){
-            axios.get('v1/batch/'+ route.params.id+'/',{
+            axios.get('v1/inventory/'+ route.params.id+'/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -32,7 +32,7 @@ export default defineComponent({
         }
 
         function getProducts(){
-            axios.get('v1/product/',{
+            axios.get('v1/product/all/',{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -42,8 +42,7 @@ export default defineComponent({
         }
 
         function editBatch(){
-            axios.put('v1/batch/'+ route.params.id+'/',{
-                batch_name: batch.value.batch_name,
+            axios.put('v1/inventory/'+ route.params.id+'/',{
                 product: batch.value.product,
                 quantity: batch.value.quantity,
                 expiration_date: hasExpiration.value ? moment(batch.value.expiration_date).utcOffset("+08:00") : null,
@@ -93,16 +92,12 @@ export default defineComponent({
     <div class="container-fluid">
         <div class="m-3">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-xl-4">
 
                 </div>
-                <div class="col-md-4 bord ">
-                    <h3 class="text-center p-3">Edit Batch</h3>
+                <div class="col-xl-4 bord ">
+                    <h3 class="text-center p-3">Edit Inventory: {{batch.inventory_id}}</h3>
                     <form action="post" class="p-3" @submit.prevent="editBatch">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" autocomplete="off" v-model="batch.batch_name">
-                            <label for="floatingInput">Batch Name</label>
-                        </div>
                         <select class="form-select form-floating mb-3" v-model="batch.product">
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>
                         </select>
@@ -125,7 +120,7 @@ export default defineComponent({
                         </div>
                     </form>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xl-4">
 
                 </div>
             </div>
