@@ -31,7 +31,7 @@ export default defineComponent({
 
 
         function revertRequest(request :any){
-            if(request.remarks == 'c'){
+            if(request.remarks == 'a'){
                 Swal.fire({
                     icon: 'warning',
                     title: 'Waning!',
@@ -123,7 +123,7 @@ export default defineComponent({
                             <td>{{request.quantity}}</td>
                             <td>{{translateDate(request.request_date)}}</td>
                             <td>{{request.get_remarks}}</td>
-                            <td><button class="btn btn-danger" @click="revertRequest(request)"><i class="bi bi-backspace-fill me-2"></i>Cancel</button></td>
+                            <td><button class="btn btn-danger" @click="revertRequest(request)" :class="{'disabled':(request.remarks == 'a')}"><i class="bi bi-backspace-fill me-2"></i>Cancel</button></td>
                         </tr>
                     </tbody>
                 </table>
