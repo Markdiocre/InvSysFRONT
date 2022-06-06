@@ -31,11 +31,11 @@ export default defineComponent({
 
 
         function revertRequest(request :any){
-            if(request.is_approved == true){
+            if(request.remarks == 'c'){
                 Swal.fire({
                     icon: 'warning',
                     title: 'Waning!',
-                    text: 'Approved Request cannot be reverted! Please contact an admin to disapprove your request before reverting'
+                    text: 'Approved Request cannot be cancelled! Please contact an admin to disapprove your request before reverting'
                 })
             }else{
                 Swal.fire({
