@@ -31,8 +31,11 @@ export default defineConfig({
             type: 'image/png',
             purpose: 'any maskable',
           }
-        ]
-      }
+        ],
+      },
+      workbox: {
+        cleanupOutdatedCaches: true  
+      } 
   })
 ],
   resolve: {
