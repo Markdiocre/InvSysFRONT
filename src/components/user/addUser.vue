@@ -16,7 +16,7 @@ export default defineComponent({
         let name = ref('')
         let username = ref('')
         let password = ref('')
-        let user_level = ref('')
+        let user_level = ref(1)
         let last_login = moment().format('YYYY-MM-DD[T]HH:mm:ss')
 
         function getUserGroups(){
