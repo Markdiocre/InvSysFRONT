@@ -89,22 +89,22 @@ export default defineComponent({
                     <h3 class="text-center p-3">Add New Product</h3>
                     <form action="post" class="p-3" @submit.prevent="editProduct">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" autocomplete="off" v-model="product.name">
+                            <input type="text" class="form-control" autocomplete="off" v-model="product.name" required>
                             <label for="floatingInput">Product Name</label>
                         </div>
-                        <select class="form-select form-floating mb-3" v-model="product.category">
+                        <select class="form-select form-floating mb-3" v-model="product.category" required>
                             <option v-for="cat in categories" :key="cat.category_id" :value="cat.category_id">{{cat.name}}</option>
                         </select>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" autocomplete="off" v-model="product.measuring_name">
+                            <input type="text" class="form-control" autocomplete="off" v-model="product.measuring_name" required>
                             <label for="floatingInput">Measuring Name</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" autocomplete="off" v-model="product.reordering_point">
+                            <input type="number" class="form-control" autocomplete="off" v-model="product.reordering_point" required>
                             <label for="floatingInput">Reordering Point</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" step="0.01" autocomplete="off" v-model="product.selling_price">
+                            <input type="number" class="form-control" step="0.01" autocomplete="off" v-model="product.selling_price" required>
                             <label for="floatingInput">Selling Price</label>
                         </div>
                         <div class="d-grid gap-2">

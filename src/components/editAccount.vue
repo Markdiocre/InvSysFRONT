@@ -63,11 +63,11 @@ export default defineComponent({
                 <h3 class="text-center">Edit Account</h3>
                 <form method="post" @submit.prevent="updateSelf">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" v-model="self.name">
+                        <input type="text" class="form-control" v-model="self.name" required>
                         <label for="floatingInput">Name</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control"  v-model="self.username">
+                        <input type="text" class="form-control"  v-model="self.username" required>
                         <label for="floatingInput">Username</label>
                     </div>
                     <div class="row">

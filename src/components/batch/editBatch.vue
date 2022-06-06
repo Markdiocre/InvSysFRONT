@@ -98,15 +98,15 @@ export default defineComponent({
                 <div class="col-xl-4 bord ">
                     <h3 class="text-center p-3">Edit Inventory: {{batch.inventory_id}}</h3>
                     <form action="post" class="p-3" @submit.prevent="editBatch">
-                        <select class="form-select form-floating mb-3" v-model="batch.product">
+                        <select class="form-select form-floating mb-3" v-model="batch.product" required>
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>
                         </select>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" autocomplete="off" v-model="batch.quantity">
+                            <input type="number" class="form-control" autocomplete="off" v-model="batch.quantity" required>
                             <label for="floatingInput">Quantity</label>
                         </div>
                         <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" v-model="hasExpiration">
+                            <input class="form-check-input" type="checkbox" v-model="hasExpiration" required>
                             <label class="form-check-label" for="flexCheckDefault">
                                 Has Expiration Date
                             </label>

@@ -98,14 +98,14 @@ export default defineComponent({
                 <div class="col-md-4 bord ">
                     <h3 class="text-center p-3">Add New Product</h3>
                     <form action="post" class="p-3" @submit.prevent="makeRequest">
-                        <select class="form-select form-floating mb-3" v-model="product">
+                        <select class="form-select form-floating mb-3" v-model="product" required>
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>
                         </select>
-                        <select class="form-select form-floating mb-3" v-model="batch">
+                        <select class="form-select form-floating mb-3" v-model="batch" required>
                             <option v-for="btch in proxyBatches" :key="btch.inventory_id" :value="btch.inventory_id"><p>Reference No: {{btch.inventory_id}} - ({{btch.quantity}})</p></option>
                         </select>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" autocomplete="off" v-model="quantity">
+                            <input type="text" class="form-control" autocomplete="off" v-model="quantity" required>
                             <label for="floatingInput">Quantity</label>
                         </div>
                         <div class="d-grid gap-2">

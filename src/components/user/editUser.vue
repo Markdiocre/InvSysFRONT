@@ -91,17 +91,17 @@ export default defineComponent({
             <h3 class="text-center p-3">Edit User</h3>
             <form method="post" class="p-3" @submit.prevent="putUser">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" v-model="user.name">
+                    <input type="text" class="form-control"  placeholder="name@example.com" v-model="user.name" required>
                     <label for="floatingInput">Name</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" v-model="user.username">
+                    <input type="text" class="form-control"  placeholder="name@example.com" v-model="user.username" required>
                     <label for="floatingInput">Username</label>
                 </div>
-                <select class="form-select form-floating mb-3" v-model="user.user_level">
+                <select class="form-select form-floating mb-3" v-model="user.user_level" required>
                     <option v-for="group in userGroups" :key="group.group_id" :value="group.user_group_id">{{group.group_name}}</option>
                 </select>
-                <select class="form-select" name="group_status" v-model="user.is_active">
+                <select class="form-select" name="group_status" v-model="user.is_active" required>
                     <option value="false">Inactive</option>
                     <option value="true">Active</option>
                 </select>

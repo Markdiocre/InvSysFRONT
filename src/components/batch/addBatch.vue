@@ -84,21 +84,21 @@ export default defineComponent({
                 <div class="col-md-4 bord ">
                     <h3 class="text-center p-3">Add New Batch</h3>
                     <form action="post" class="p-3" @submit.prevent="addBatch">
-                        <select class="form-select form-floating mb-3" v-model="product">
+                        <select class="form-select form-floating mb-3" v-model="product" required>
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>
                         </select>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" autocomplete="off" v-model="quantity">
+                            <input type="number" class="form-control" autocomplete="off" v-model="quantity" required>
                             <label for="floatingInput">Quantity</label>
                         </div>
                         <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" v-model="hasExpiration">
+                            <input class="form-check-input" type="checkbox" v-model="hasExpiration" required>
                             <label class="form-check-label" for="flexCheckDefault">
                                 Has Expiration Date
                             </label>
                         </div>
                         <div class="form-floating mb-3" v-show="hasExpiration">
-                            <input type="datetime-local" class="form-control" autocomplete="off" v-model="expiration_date">
+                            <input type="datetime-local" class="form-control" autocomplete="off" v-model="expiration_date" required>
                             <label for="floatingInput">Expiration Date</label>
                         </div>
                         <div class="d-grid gap-2">

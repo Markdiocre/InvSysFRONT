@@ -90,18 +90,18 @@ export default defineComponent({
             <h3 class="text-center p-3">Add New User</h3>
             <form method="post" class="p-3" @submit.prevent="addNewUser">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" name="name"  v-model="name" autocomplete="off">
+                    <input type="text" class="form-control"  placeholder="name@example.com" name="name"  v-model="name" autocomplete="off" required>
                     <label for="floatingInput">Name</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" name="username" v-model="username" autocomplete="off">
+                    <input type="text" class="form-control"  placeholder="name@example.com" name="username" v-model="username" autocomplete="off" required>
                     <label for="floatingInput">Username</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control"  placeholder="name@example.com" name="password" v-model="password" autocomplete="off">
+                    <input type="password" class="form-control"  placeholder="name@example.com" name="password" v-model="password" autocomplete="off" required>
                     <label for="floatingInput">Password</label>
                 </div>
-                <select class="form-select form-floating mb-3" v-model="user_level">
+                <select class="form-select form-floating mb-3" v-model="user_level" required>
                     <option v-for="group in userGroups" :key="group.group_id" :value="group.user_group_id">{{group.group_name}}</option>
                 </select>
                 <div class="d-grid gap-2">

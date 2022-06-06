@@ -73,14 +73,14 @@ export default defineComponent({
             <h3 class="text-center p-3">Add New User Group</h3>
             <form method="post" class="p-3" @submit.prevent="putUserGroup">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control"  placeholder="name@example.com" name="group_name" v-model="userGroup.group_name">
+                    <input type="text" class="form-control"  placeholder="name@example.com" name="group_name" v-model="userGroup.group_name" required>
                     <label for="floatingInput">Group Name</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control"  placeholder="name@example.com" name="group_level" min="0" v-model="userGroup.group_level">
+                    <input type="number" class="form-control"  placeholder="name@example.com" name="group_level" min="0" v-model="userGroup.group_level" required>
                     <label for="floatingInput">Group Level</label>
                 </div>
-                <select class="form-select" name="group_status" v-model="userGroup.group_status">
+                <select class="form-select" name="group_status" v-model="userGroup.group_status" required>
                     <option value="false">Inactive</option>
                     <option value="true">Active</option>
                 </select>

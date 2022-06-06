@@ -51,7 +51,7 @@ export default defineComponent({
             <h3 class="text-center p-3">Add New Category</h3>
             <form method="post" class="p-3" @submit.prevent="addCategory">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" autocomplete="off" v-model="name">
+                    <input type="text" class="form-control" autocomplete="off" v-model="name" required> 
                     <label for="floatingInput">Category Name</label>
                 </div>
                 <div class="d-grid gap-2">

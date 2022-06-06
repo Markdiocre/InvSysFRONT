@@ -60,15 +60,15 @@ export default defineComponent({
                 <h3 class="text-center">Edit Account</h3>
                 <form method="post" @submit.prevent="changePass">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" v-model="current_password">
+                        <input type="password" class="form-control" v-model="current_password" required>
                         <label for="floatingInput">Current Password</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" v-model="new_password">
+                        <input type="password" class="form-control" v-model="new_password" required>
                         <label for="floatingInput">New Password</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" v-model="re_new_password">
+                        <input type="password" class="form-control" v-model="re_new_password" required>
                         <label for="floatingInput">Re-type New Password</label>
                     </div>
                     <div class="row">
