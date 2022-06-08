@@ -96,7 +96,7 @@ export default defineComponent({
                 <li v-if="currentUser.user_level_equivalent <= 1">
                     <router-link :to="{name:'viewProduct'}">Products</router-link>
                 </li>
-                <li>
+                <li v-if="currentUser.user_level_equivalent <= 1">
                     <router-link :to="{name:'viewBatch'}">Inventory</router-link>
                 </li>
                 <li>
@@ -106,7 +106,7 @@ export default defineComponent({
                         <li><router-link :to="{name:'selfRequest'}">Your Requests</router-link></li>
                     </ul>
                 </li>
-                <li>
+                <li v-if="currentUser.user_level_equivalent <= 1">
                     <a href="#Report" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reports</a>
                     <ul class="collapse list-unstyled" id="Report">
                         <li><router-link :to="{name:'monthly'}">Monthly Report</router-link></li>

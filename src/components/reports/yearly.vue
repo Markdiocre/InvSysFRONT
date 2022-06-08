@@ -3,6 +3,11 @@ import { userToken } from '@/stores/token'
 import axios from 'axios'
 import { defineComponent,onMounted,ref, watch } from 'vue'
 
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
+
+import moment from 'moment';
+
 export default defineComponent({
     setup() {
         const store = userToken()
@@ -23,6 +28,37 @@ export default defineComponent({
             })
         }
 
+        function generateReport(){
+            var pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "in",
+                format: [8, 11.5]
+            })
+
+            let columns = [
+                { header: 'Name', dataKey: 'name' },
+                { header: 'Measuring Name', dataKey: 'measuring_name' },
+                { header: 'Category', dataKey: 'category' },
+                { header: 'Unit Cost', dataKey: 'unit_cost' },
+                { header: 'Yearly Total Request', dataKey: 'yearly_request' },
+                { header: 'Yearly Total Cost', dataKey: 'yearly_cost' }
+            ]
+
+            let rows = data.value.products.map((d:any)=>({
+                name: d.name,
+                measuring_name : d.measuring_name,
+                category : d.get_category_name,
+                unit_cost: 'PHP ' + d.selling_price,
+                yearly_request: d.yearly_total,
+                yearly_cost : 'PHP' + d.yearly_total_cost
+
+            }))
+
+            pdf.text('Yearly Report for the Year ' + year.value, 0.4, 0.4)
+            autoTable(pdf,{body: rows, columns: columns, showHead:'everyPage'})
+            pdf.save(year.value + ' : Generated at - ' + moment().format('LLLL'))
+        }
+
         watch(()=>year.value,()=>{
             getReport()
         })
@@ -32,7 +68,7 @@ export default defineComponent({
         })
 
         return{
-            year, data
+            year, data, generateReport
         }
     },
 })
@@ -46,6 +82,9 @@ export default defineComponent({
                 <div class="m-4 p-2 row">
                     <div class="col">
                         <input type="number" class="form-control" placeholder="Year" v-model="year">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-info" @click="generateReport">Generate PDF</button>
                     </div>
                 </div>
             </div>

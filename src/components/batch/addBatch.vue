@@ -92,13 +92,13 @@ export default defineComponent({
                             <label for="floatingInput">Quantity</label>
                         </div>
                         <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" v-model="hasExpiration" required>
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <input class="form-check-input" type="checkbox" v-model="hasExpiration">
+                            <label class="form-check-label">
                                 Has Expiration Date
                             </label>
                         </div>
                         <div class="form-floating mb-3" v-show="hasExpiration">
-                            <input type="datetime-local" class="form-control" autocomplete="off" v-model="expiration_date" required>
+                            <input type="datetime-local" class="form-control" autocomplete="off" v-model="expiration_date">
                             <label for="floatingInput">Expiration Date</label>
                         </div>
                         <div class="d-grid gap-2">

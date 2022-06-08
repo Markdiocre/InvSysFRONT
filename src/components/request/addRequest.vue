@@ -96,7 +96,7 @@ export default defineComponent({
 
                 </div>
                 <div class="col-md-4 bord ">
-                    <h3 class="text-center p-3">Add New Product</h3>
+                    <h3 class="text-center p-3">Make Request</h3>
                     <form action="post" class="p-3" @submit.prevent="makeRequest">
                         <select class="form-select form-floating mb-3" v-model="product" required>
                             <option v-for="prod in products" :key="prod.product_id" :value="prod.product_id">{{prod.name}}</option>

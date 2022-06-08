@@ -3,6 +3,11 @@ import { userToken } from '@/stores/token'
 import axios from 'axios'
 import { defineComponent,onMounted,ref, watch } from 'vue'
 
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
+
+import moment from 'moment';
+
 export default defineComponent({
     setup() {
         const store = userToken()
@@ -25,6 +30,53 @@ export default defineComponent({
             })
         }
 
+        function generateReport(){
+            var pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "in",
+                format: [8, 11.5]
+            })
+            
+            let months = [
+                '',
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ]
+
+            let columns = [
+                { header: 'Name', dataKey: 'name' },
+                { header: 'Measuring Name', dataKey: 'measuring_name' },
+                { header: 'Category', dataKey: 'category' },
+                { header: 'Unit Cost', dataKey: 'unit_cost' },
+                { header: 'Monthly Total Request', dataKey: 'month_request' },
+                { header: 'Monthly Total Cost', dataKey: 'month_cost' }
+            ]
+
+            let rows = data.value.products.map((d:any)=>({
+                name: d.name,
+                measuring_name : d.measuring_name,
+                category : d.get_category_name,
+                unit_cost: 'PHP ' + d.selling_price,
+                month_request: d.monthly_total,
+                month_cost : d.monthly_total_cost
+
+            }))
+
+            pdf.text('Monthly Report for ' + months[month.value] + ' of ' + year.value, 0.4, 0.4)
+            autoTable(pdf,{body: rows, columns: columns, showHead:'everyPage'})
+            pdf.save(year.value + ' ' + month.value + ' : Generated at - ' + moment().format('LLLL'))
+        }
+
         watch(()=>year.value,()=>{
             getReport()
         })
@@ -38,7 +90,7 @@ export default defineComponent({
         })
 
         return{
-            month, year, data
+            month, year, data, generateReport
         }
     },
 })
@@ -47,7 +99,7 @@ export default defineComponent({
 <template>
     <div class="container-fluid">
         <div class="bord m-3">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between" >
                 <h3 class="p-4">Monthly Report</h3>
                 <div class="m-4 p-2 row">
                     <select class="form-select col" v-model="month">
@@ -67,11 +119,14 @@ export default defineComponent({
                     <div class="col">
                         <input type="number" class="form-control" placeholder="Year" v-model="year">
                     </div>
+                    <div class="col">
+                        <button class="btn btn-info" @click="generateReport">Generate PDF</button>
+                    </div>
                 </div>
             </div>
             <div class="table-responsive m-3">
-                <table class="table table-hover table-bordered " >
-                    <thead >
+                <table class="table table-hover table-bordered " id="report">
+                    <thead>
                         <th>Name</th>
                         <th>Measuring Name</th>
                         <th>Category</th>

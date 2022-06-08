@@ -30,7 +30,7 @@ export default defineComponent({
 
         function reject(id: any){
             axios.patch('v1/request/'+id+'/',{
-                remarks: 'a'
+                remarks: 'r'
             },{
                 headers:{
                     Authorization: 'token '+ store.getToken.token
@@ -39,7 +39,7 @@ export default defineComponent({
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: 'You\'ve succesfully requested!'
+                    text: 'You\'ve succesfully rejected the request!'
                 })
                 selfRequest()
             }).catch((err)=>{

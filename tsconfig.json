@@ -7,7 +7,8 @@
       "@/*": ["./src/*"]
     },
     "types": [
-      "vite-plugin-pwa/client"
+      "vite-plugin-pwa/client",
+      "jquery"
     ]
   },
 

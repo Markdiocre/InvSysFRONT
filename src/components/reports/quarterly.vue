@@ -3,6 +3,11 @@ import { userToken } from '@/stores/token'
 import axios from 'axios'
 import { defineComponent,onMounted,ref, watch } from 'vue'
 
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
+
+import moment from 'moment';
+
 export default defineComponent({
     setup() {
         const store = userToken()
@@ -25,6 +30,45 @@ export default defineComponent({
             })
         }
 
+        function generateReport(){
+            var pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "in",
+                format: [8, 11.5]
+            })
+            
+            let quarters = [
+                '',
+                '1st Quarter',
+                '2nd Quarter',
+                '3rd Quarter',
+                '4th Quarter'
+            ]
+
+            let columns = [
+                { header: 'Name', dataKey: 'name' },
+                { header: 'Measuring Name', dataKey: 'measuring_name' },
+                { header: 'Category', dataKey: 'category' },
+                { header: 'Unit Cost', dataKey: 'unit_cost' },
+                { header: 'Quarterly Total Request', dataKey: 'quarterly_request' },
+                { header: 'Quarterly Total Cost', dataKey: 'quarterly_cost' }
+            ]
+
+            let rows = data.value.products.map((d:any)=>({
+                name: d.name,
+                measuring_name : d.measuring_name,
+                category : d.get_category_name,
+                unit_cost: 'PHP ' + d.selling_price,
+                quarterly_request: d.quarterly_total,
+                quarterly_cost : d.quarterly_total_cost
+
+            }))
+
+            pdf.text('Quarterly Report for ' + quarters[parseInt(quarter.value)] + ' of ' + year.value, 0.4, 0.4)
+            autoTable(pdf,{body: rows, columns: columns, showHead:'everyPage'})
+            pdf.save(year.value + ' ' + quarter.value + ' : Generated at - ' + moment().format('LLLL'))
+        }
+
         watch(()=>year.value,()=>{
             getReport()
         })
@@ -38,7 +82,7 @@ export default defineComponent({
         })
 
         return{
-            quarter, year, data
+            quarter, year, data, generateReport
         }
     },
 })
@@ -58,6 +102,9 @@ export default defineComponent({
                     </select>
                     <div class="col">
                         <input type="number" class="form-control" placeholder="Year" v-model="year">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-info" @click="generateReport">Generate PDF</button>
                     </div>
                 </div>
             </div>
