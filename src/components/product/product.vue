@@ -109,7 +109,7 @@ export default defineComponent({
                             <td>{{product.measuring_name}}</td>
                             <td>{{product.reordering_point}}</td>
                             <td>{{product.selling_price}}</td>
-                            <td>{{product.total_quantity}}</td>
+                            <td>{{product.total_quantity * product.selling_price}}</td>
                             <td>{{product.remarks}}</td>
                             <td><router-link :to="{name:'editProduct', params:{id:product.product_id}}" class="btn btn-warning me-1" ><i class="bi bi-pencil-square"></i>Edit</router-link><button class="btn btn-danger" @click="delProduct(product.product_id)"><i class="bi bi-trash3-fill"></i>Delete</button></td>
                         </tr>
