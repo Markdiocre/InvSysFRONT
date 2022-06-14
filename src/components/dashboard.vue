@@ -2,6 +2,7 @@
 import { userToken } from '@/stores/token'
 import { defineComponent, onMounted, ref } from 'vue'
 import axios from 'axios'
+import moment from 'moment'
 
 export default defineComponent({
     props:['currentUser'],
@@ -29,12 +30,16 @@ export default defineComponent({
             })
         }
 
+        function translateDate(date: any){
+            return moment(date).format('LLLL')
+        }
+
         onMounted(()=>{
             getDashboard()
         })
 
         return{
-            data, reqs, products,props
+            data, reqs, products,props,translateDate
         }
     }
 })
@@ -115,16 +120,17 @@ export default defineComponent({
                 </div>
             </div>
             <div :class="{'row text-center': (props.currentUser.user_level_equivalent <= 1), 'collapse': (props.currentUser.user_level_equivalent > 1)}">
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                     <div class="m-3 p-3 bord">
                         <h2>Recent Requests</h2>
                         <div class="table-responsive">
                             <table class="table table-hovered text-start">
                                 <thead>
-                                    <th>Inventory Reference No.</th>
+                                    <th>Reference No.</th>
                                     <th>Requested By</th>
                                     <th>Quantity</th>
                                     <th>Product</th>
+                                    <th>Date Requested</th>
                                 </thead>
                                 <tbody>
                                     <tr v-for="req in reqs" :key="req.request_id">
@@ -132,6 +138,7 @@ export default defineComponent({
                                         <td>{{req.get_user_name}}</td>
                                         <td>{{req.quantity}}</td>
                                         <td>{{req.get_product_name}}</td>
+                                        <td>{{translateDate(req.request_date)}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -139,7 +146,7 @@ export default defineComponent({
                     </div>
                 </div>
 
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="m-3 p-3 bord">
                         <h2>Recent Products</h2>
                         <div class="table-responsive">
