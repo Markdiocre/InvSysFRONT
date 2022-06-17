@@ -1,7 +1,7 @@
 <script lang="ts">
 import { userToken } from '@/stores/token'
 import axios from 'axios'
-import { defineComponent,onMounted,ref, watch } from 'vue'
+import { computed, defineComponent,onMounted,ref, watch } from 'vue'
 
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
@@ -9,7 +9,8 @@ import autoTable from 'jspdf-autotable';
 import moment from 'moment';
 
 export default defineComponent({
-    setup() {
+    props:['currentUser'],
+    setup(props) {
         const store = userToken()
 
         let data = ref({} as any)
@@ -77,6 +78,8 @@ export default defineComponent({
             pdf.save(year.value + ' ' + month.value + ' : Generated at - ' + moment().format('LLLL'))
         }
 
+
+
         watch(()=>year.value,()=>{
             getReport()
         })
@@ -135,13 +138,13 @@ export default defineComponent({
                         <th>Monthly Total Cost</th>
                     </thead>
                     <tbody>
-                        <tr v-for="product in  data.products" :key="product.product_id">
-                            <td>{{product.name}}</td>
-                            <td>{{product.measuring_name}}</td>
-                            <td>{{product.get_category_name}}</td>
-                            <td>PHP {{product.selling_price}}</td>
-                            <td>{{product.monthly_total}}</td>
-                            <td>PHP {{product.monthly_total_cost}}</td>
+                        <tr v-for="product in data.products" :key="product.product_id">
+                            <td v-if="product.monthly_total > 0">{{product.name}}</td>
+                            <td v-if="product.monthly_total > 0">{{product.measuring_name}}</td>
+                            <td v-if="product.monthly_total > 0">{{product.get_category_name}}</td>
+                            <td v-if="product.monthly_total > 0">PHP {{product.selling_price}}</td>
+                            <td v-if="product.monthly_total > 0">{{product.monthly_total}}</td>
+                            <td v-if="product.monthly_total > 0">PHP {{product.monthly_total_cost}}</td>
                         </tr>
                     </tbody>
                 </table>

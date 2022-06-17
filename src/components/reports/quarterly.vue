@@ -9,7 +9,8 @@ import autoTable from 'jspdf-autotable';
 import moment from 'moment';
 
 export default defineComponent({
-    setup() {
+    props:['currentUser'],
+    setup(props) {
         const store = userToken()
 
         let data = ref({} as any)
@@ -27,6 +28,7 @@ export default defineComponent({
                 }
             }).then((res)=>{
                 data.value = res.data
+                console.log(res.data)
             })
         }
 
@@ -61,13 +63,13 @@ export default defineComponent({
                 unit_cost: 'PHP ' + d.selling_price,
                 quarterly_request: d.quarterly_total,
                 quarterly_cost : d.quarterly_total_cost
-
             }))
 
             pdf.text('Quarterly Report for ' + quarters[parseInt(quarter.value)] + ' of ' + year.value, 0.4, 0.4)
             autoTable(pdf,{body: rows, columns: columns, showHead:'everyPage'})
             pdf.save(year.value + ' ' + quarter.value + ' : Generated at - ' + moment().format('LLLL'))
         }
+
 
         watch(()=>year.value,()=>{
             getReport()
@@ -120,12 +122,12 @@ export default defineComponent({
                     </thead>
                     <tbody>
                         <tr v-for="product in  data.products" :key="product.product_id">
-                            <td>{{product.name}}</td>
-                            <td>{{product.measuring_name}}</td>
-                            <td>{{product.get_category_name}}</td>
-                            <td>PHP {{product.selling_price}}</td>
-                            <td>{{product.quarterly_total}}</td>
-                            <td>PHP {{product.quarterly_total_cost}}</td>
+                            <td v-if="product.quarterly_total > 0">{{product.name}}</td>
+                            <td v-if="product.quarterly_total > 0">{{product.measuring_name}}</td>
+                            <td v-if="product.quarterly_total > 0">{{product.get_category_name}}</td>
+                            <td v-if="product.quarterly_total > 0">PHP {{product.selling_price}}</td>
+                            <td v-if="product.quarterly_total > 0">{{product.quarterly_total}}</td>
+                            <td v-if="product.quarterly_total > 0">PHP {{product.quarterly_total_cost}}</td>
                         </tr>
                     </tbody>
                 </table>
