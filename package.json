@@ -1,6 +1,6 @@
 {
   "name": "inv_sys",
-  "version": "0.0.1",
+  "version": "0.0.40",
   "scripts": {
     "dev": "vite",
     "postinstall": "npm run build",

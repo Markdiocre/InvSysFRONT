@@ -56,7 +56,7 @@ export default defineComponent({
                     <div class="row">
                         <div class="col-md-6 ">
                             <div class="p-3">
-                                <img src="@/assets/logo.png" class="logo img-thumbnail mx-auto  d-block " alt="Login Logo"/>
+                                <img src="@/assets/logo2.png" class="logo img-thumbnail mx-auto  d-block " alt="Login Logo"/>
                             </div>
                         </div>
                         <div class="col-md-6 bord">
@@ -99,7 +99,7 @@ export default defineComponent({
         padding: 0px !important;
     }
     .logo{
-        width: 400px !important;
+        width: 600px !important;
         height: 400px !important;
         background-color: transparent;
         border-color: transparent;
