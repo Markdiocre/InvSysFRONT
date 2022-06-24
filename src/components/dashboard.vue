@@ -12,6 +12,7 @@ export default defineComponent({
         let data = ref({} as  any)
         let reqs = ref({} as any)
         let products = ref({} as any)
+        let reps = ref({} as any)
         let headers = {
                     Authorization: 'token '+ store.getToken.token
                 }
@@ -20,11 +21,15 @@ export default defineComponent({
             axios.all([
                 axios.get('v1/dashboard/',{headers: headers}),
                 axios.get('v1/request/recent/',{headers: headers}),
-                axios.get('v1/product/recent/',{headers: headers})
-            ]).then(axios.spread((dashboard, request, product)=>{
+                axios.get('v1/product/recent/',{headers: headers}),
+                axios.get('v1/product/replenish/', {headers: headers})
+            ]).then(axios.spread((dashboard, request, product, rep)=>{
                 data.value = dashboard.data
                 reqs.value = request.data
                 products.value = product.data
+                reps.value = rep.data
+
+                console.log(rep.data)
             })).catch((err)=>{
                 console.log(err)
             })
@@ -39,7 +44,7 @@ export default defineComponent({
         })
 
         return{
-            data, reqs, products,props,translateDate
+            data, reqs, products,props,translateDate, reps
         }
     }
 })
@@ -120,7 +125,7 @@ export default defineComponent({
                 </div>
             </div>
             <div :class="{'row text-center': (props.currentUser.user_level_equivalent <= 1), 'collapse': (props.currentUser.user_level_equivalent > 1)}">
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                     <div class="m-3 p-3 bord">
                         <h2>Recent Requests</h2>
                         <div class="table-responsive">
@@ -145,8 +150,7 @@ export default defineComponent({
                         </div>
                     </div>
                 </div>
-
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div class="m-3 p-3 bord">
                         <h2>Recent Products</h2>
                         <div class="table-responsive">
@@ -159,6 +163,23 @@ export default defineComponent({
                                     <tr v-for="prod in products" :key="prod.product_id">
                                         <td>{{prod.name}}</td>
                                         <td>{{prod.total_quantity}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="m-3 p-3 bord">
+                        <h2>Products for Replenish</h2>
+                        <div class="table-responsive">
+                            <table class="table table-hovered text-start">
+                                <thead>
+                                    <th>Name</th>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="prod in reps.out_of_stock" :key="prod.product_id">
+                                        <td>{{prod.name}}</td>
                                     </tr>
                                 </tbody>
                             </table>
